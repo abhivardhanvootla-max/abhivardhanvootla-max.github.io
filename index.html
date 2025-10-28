@@ -10,19 +10,17 @@
       padding: 0;
       box-sizing: border-box;
     }
-    body, html {
+    html, body {
       height: 100%;
       overflow: hidden;
       font-family: 'Poppins', sans-serif;
+      background-color: black;
     }
 
     /* Password Screen */
     #password-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: linear-gradient(135deg, #ffb6c1, #ff69b4);
       display: flex;
       flex-direction: column;
@@ -56,38 +54,52 @@
       background: #ff1493;
     }
 
-    /* Slideshow Background */
+    /* Slideshow */
     #slideshow {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
+      inset: 0;
       overflow: hidden;
+      background: black;
+      z-index: 1;
     }
     .slide {
       position: absolute;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background: black;
       opacity: 0;
-      transition: opacity 2s ease;
+      transition: opacity 1.5s ease;
     }
     .slide.active {
       opacity: 1;
     }
 
-    /* Message */
+    /* Typing Message */
     #message {
       position: absolute;
-      bottom: 20%;
+      bottom: 25%;
       width: 100%;
       text-align: center;
       color: white;
       font-size: 2rem;
       text-shadow: 2px 2px 8px black;
-      animation: fadeIn 2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid white;
+      width: 0;
+      margin: 0 auto;
+      animation: typing 4s steps(40, end) forwards, blink 0.7s step-end infinite;
+      z-index: 2;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
     }
 
     /* Video */
@@ -96,9 +108,11 @@
       bottom: 5%;
       width: 100%;
       text-align: center;
+      z-index: 2;
     }
     #video-container video {
-      width: 80%;
+      width: 70%;
+      max-width: 600px;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(255,255,255,0.4);
     }
@@ -106,32 +120,28 @@
     /* Heart Animation */
     .heart {
       position: fixed;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       background: pink;
       transform: rotate(45deg);
       animation: floatUp 5s linear infinite;
       left: calc(50% - 10px);
+      z-index: 0;
     }
     .heart::before, .heart::after {
       content: '';
       position: absolute;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       background: pink;
       border-radius: 50%;
     }
-    .heart::before { top: -10px; left: 0; }
-    .heart::after { left: -10px; top: 0; }
+    .heart::before { top: -7px; left: 0; }
+    .heart::after { left: -7px; top: 0; }
 
     @keyframes floatUp {
       0% { transform: translateY(0) rotate(45deg); opacity: 1; }
       100% { transform: translateY(-700px) rotate(45deg); opacity: 0; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
   </style>
 </head>
@@ -162,6 +172,7 @@
   <div id="video-container">
     <video controls>
       <source src="assets/video.mp4" type="video/mp4">
+      Your browser does not support the video tag.
     </video>
   </div>
 
@@ -174,12 +185,15 @@
     const music = document.getElementById('bg-music');
 
     function checkPassword() {
-      const entered = document.getElementById('password').value;
+      const entered = document.getElementById('password').value.trim();
       if (entered === correctPassword) {
         screen.style.display = 'none';
         startSlideshow();
-        music.play().catch(() => console.log("Autoplay blocked"));
         spawnHearts();
+        startTyping();
+        music.play().catch(() => {
+          console.log("Autoplay blocked — user must tap screen once to start music.");
+        });
       } else {
         alert('Wrong password 💔');
       }
@@ -193,7 +207,7 @@
         slides[current].classList.remove('active');
         current = (current + 1) % slides.length;
         slides[current].classList.add('active');
-      }, 3000); // change every 3s
+      }, 3000);
     }
 
     // Floating hearts
@@ -207,6 +221,12 @@
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 5000);
       }, 500);
+    }
+
+    // Typing Animation Start Delay
+    function startTyping() {
+      const message = document.getElementById('message');
+      message.style.animation = 'typing 4s steps(40, end) forwards, blink 0.7s step-end infinite';
     }
   </script>
 </body>
