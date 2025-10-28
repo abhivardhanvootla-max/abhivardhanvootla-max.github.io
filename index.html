@@ -1,194 +1,169 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Happy Birthday Rasi 🎂</title>
-  <style>
-    /* --- Reset / base --- */
-    :root{--bg:#fff6fb;--accent:#ff6fa3;--accent2:#ff3d6e;--card:#ffffffcc;--glass:rgba(255,255,255,0.65)}
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{background:linear-gradient(180deg,#fff6fb 0%, #fff0f6 50%);display:flex;align-items:center;justify-content:center;padding:24px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Rasi 💖</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
 
-    /* --- Container --- */
-    .stage{width:100%;max-width:980px;margin:0 auto}
-    .card{background:var(--card);border-radius:18px;padding:28px;box-shadow:0 10px 40px rgba(0,0,0,0.08)}
+        /* Password Screen */
+        #password-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
 
-    /* --- Header --- */
-    .hero{display:flex;gap:20px;align-items:center}
-    .hero .left{flex:1}
-    h1{margin:0;font-size:34px;color:var(--accent2);letter-spacing:0.2px}
-    p.lead{margin:8px 0 0;color:#7d5160}
+        #password-screen input {
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+        }
 
-    /* --- Heart animation --- */
-    .heart{width:84px;height:84px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 6px 30px rgba(255,95,140,0.18)}
-    .heart:after{content:'❤';font-size:30px}
+        #password-screen button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: white;
+            color: #ff1493;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-    /* --- Gallery --- */
-    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-    .gallery img{width:100%;height:160px;object-fit:cover;border-radius:12px;border:4px solid var(--glass)}
+        /* Floating hearts */
+        .heart {
+            position: fixed;
+            bottom: -10px;
+            color: pink;
+            font-size: 20px;
+            animation: floatUp 6s linear infinite;
+        }
 
-    /* --- Message + video --- */
-    .message{margin-top:20px;padding:16px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,245,250,0.9));}
-    .message h2{margin:0 0 8px;color:#a2335b}
-    .message p{margin:0;color:#6b414b;line-height:1.5}
+        @keyframes floatUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-800px); opacity: 0; }
+        }
 
-    video{width:100%;border-radius:12px;margin-top:14px}
+        /* Main content */
+        #main-content {
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
 
-    /* --- Footer / controls --- */
-    .controls{display:flex;gap:8px;align-items:center;margin-top:16px}
-    .btn{padding:10px 14px;border-radius:10px;background:var(--accent);color:white;border:0;cursor:pointer}
-    .btn.ghost{background:transparent;color:var(--accent2);border:1px solid rgba(255,61,110,0.15)}
+        h1 {
+            font-size: 2.5em;
+            margin-top: 40px;
+            text-shadow: 2px 2px 10px pink;
+        }
 
-    /* --- Password overlay --- */
-    .overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(255,244,247,0.95),rgba(255,242,248,0.98));display:flex;align-items:center;justify-content:center;z-index:999}
-    .pwbox{width:420px;background:rgba(255,255,255,0.95);padding:26px;border-radius:16px;box-shadow:0 20px 60px rgba(120,40,70,0.12);text-align:center}
-    .pwbox h3{margin:0 0 6px;color:var(--accent2)}
-    .pwbox p{margin:0 0 18px;color:#7f4a56}
-    .pwbox input{width:100%;padding:12px;border-radius:10px;border:1px solid #f0d9e0;font-size:16px}
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 30px;
+        }
 
-    /* --- small screens --- */
-    @media (max-width:720px){
-      .hero{flex-direction:column;align-items:flex-start}
-      .gallery{grid-template-columns:repeat(2,1fr)}
-      .pwbox{width:92%}
-    }
-  </style>
+        .gallery img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            margin: 10px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px pink;
+            transition: transform 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.1);
+        }
+
+        video {
+            margin-top: 30px;
+            width: 80%;
+            border-radius: 20px;
+            box-shadow: 0 0 25px pink;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Background music (place file named "music.mp3" in the same repo) -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="music.mp3" type="audio/mpeg">
-    <!-- If you prefer to use an external link, replace the src above with a full URL -->
-  </audio>
+    <div id="password-screen">
+        <h2>Enter the Password 💌</h2>
+        <input type="password" id="passwordInput" placeholder="Enter password">
+        <button onclick="checkPassword()">Enter</button>
+    </div>
 
-  <div class="stage">
-    <div class="card">
-      <div class="hero">
-        <div class="left">
-          <h1>Happy Birthday, Thathsavi — Rasi 🌹</h1>
-          <p class="lead">A little surprise made with ❤️ — open the memories, watch, and read my message.</p>
+    <div id="main-content">
+        <h1>Happy Birthday My Rasi 💖</h1>
 
-          <div class="gallery" id="gallery">
-            <!-- Add your images here as <img src="assets/photo1.jpg"> -->
-           <div class="gallery">
-    <img src="assets/photo1.jpg" alt="photo1">
-    <img src="assets/photo2.jpg" alt="photo2">
-    <img src="assets/photo3.jpg" alt="photo3">
-    <img src="assets/photo4.jpg" alt="photo4">
-    <img src="assets/photo5.jpg" alt="photo5">
-    <img src="assets/photo6.jpg" alt="photo6">
-    <img src="assets/photo7.jpg" alt="photo7">
-    <img src="assets/photo8.jpg" alt="photo8">
-</div>
-
-          </div>
-
-          <div class="message">
-            <h2>To Rasi —</h2>
-            <p>Happy Birthday, my dear Thathsavi. Every moment with you is special and I tried to keep our memories here. Open the video and listen to this song — it reminds me of you.</p>
-
-            <!-- Video (place video.mp4 in repo or use external link) -->
-            <video controls id="heroVideo">
-              <source src="video.mp4" type="video/mp4">
-              Your browser does not support HTML video.
-            </video>
-
-            <div class="controls">
-              <button class="btn" id="playBtn">Play/Pause Music</button>
-              <button class="btn ghost" id="downloadBtn">Download This Page (Save)</button>
-            </div>
-          </div>
+        <div class="gallery">
+            <img src="assets/photo1.jpg" alt="photo1">
+            <img src="assets/photo2.jpg" alt="photo2">
+            <img src="assets/photo3.jpg" alt="photo3">
+            <img src="assets/photo4.jpg" alt="photo4">
+            <img src="assets/photo5.jpg" alt="photo5">
+            <img src="assets/photo6.jpg" alt="photo6">
+            <img src="assets/photo7.jpg" alt="photo7">
+            <img src="assets/photo8.jpg" alt="photo8">
         </div>
 
-        <div class="heart" title="With love"></div>
-      </div>
-
-      <div style="text-align:center;margin-top:14px;color:#6b414b;font-size:13px">Made especially for Rasi — from Abhi ❤️</div>
+        <video controls>
+            <source src="assets/video.mp4" type="video/mp4">
+        </video>
     </div>
-  </div>
 
-  <!-- Password overlay (password is EXACTLY: I M IDIOT) -->
-  <div class="overlay" id="overlay">
-    <div class="pwbox">
-      <h3>Welcome — open this for Rasi</h3>
-      <p>Enter the secret password to see the surprise.</p>
-      <input id="pwInput" placeholder="Enter password" />
-      <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
-        <button class="btn" id="enterBtn">Enter</button>
-        <button class="btn ghost" id="hintBtn">Hint</button>
-      </div>
-      <div style="margin-top:10px;color:#a23a55;font-size:13px" id="pwMsg"></div>
-    </div>
-  </div>
+    <audio id="bg-music" src="assets/music.mp3" loop></audio>
 
-  <script>
-    // ===== SETTINGS =====
-    const PASSWORD = "I M IDIOT"; // EXACT match (case & spaces)
+    <script>
+        const correctPassword = "I M IDIOT";
 
-    // Elements
-    const overlay = document.getElementById('overlay');
-    const pwInput = document.getElementById('pwInput');
-    const enterBtn = document.getElementById('enterBtn');
-    const hintBtn = document.getElementById('hintBtn');
-    const pwMsg = document.getElementById('pwMsg');
-    const bgMusic = document.getElementById('bgMusic');
-    const playBtn = document.getElementById('playBtn');
+        function checkPassword() {
+            const enteredPassword = document.getElementById("passwordInput").value;
+            if (enteredPassword === correctPassword) {
+                document.getElementById("password-screen").style.display = "none";
+                document.getElementById("main-content").style.display = "block";
+                playMusic();
+                startHearts();
+            } else {
+                alert("Wrong password! Try again 😜");
+            }
+        }
 
-    // When user clicks Enter — check password
-    function unlock(){
-      const val = pwInput.value;
-      if(val === PASSWORD){
-        overlay.style.display = 'none';
-        // Try to play music after user interaction — most browsers allow play after a click
-        bgMusic.play().catch(e => console.log('Autoplay blocked', e));
-      } else {
-        pwMsg.textContent = 'Wrong password — try again.';
-        pwInput.value = '';
-        pwInput.focus();
-      }
-    }
+        function playMusic() {
+            const music = document.getElementById("bg-music");
+            music.play();
+        }
 
-    enterBtn.addEventListener('click', unlock);
-    pwInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') unlock(); });
-
-    hintBtn.addEventListener('click', ()=>{
-      pwMsg.textContent = 'Hint: it's a silly inside-joke between you two ♥';
-    });
-
-    // Play/pause control
-    playBtn.addEventListener('click', ()=>{
-      if(bgMusic.paused) bgMusic.play(); else bgMusic.pause();
-    });
-
-    // Download page button (simple client-side save)
-    document.getElementById('downloadBtn').addEventListener('click', ()=>{
-      const blob = new Blob([document.documentElement.outerHTML],{type:'text/html'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'rasi_birthday_page.html';
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
-    });
-
-    // Optional: if you want to hide overlay after a set time (disabled)
-  </script>
-
-  <!--
-    ----- HOW TO customize after committing -----
-    1) Upload files to your repo (use "Add file" -> "Upload files"):
-       - music.mp3       (the background soft romantic audio)
-       - video.mp4       (a short video message)
-       - assets/photo1.jpg, assets/photo2.jpg, assets/photo3.jpg  (your photos)
-    2) If you name them exactly as above the page will show them automatically.
-    3) To edit text (title/message), click the file in GitHub, select the pencil icon to edit, change text and commit.
-    4) If a browser blocks autoplay, press Play/Pause button once after unlocking — that counts as user interaction so music will play.
-    5) To change the password: edit the JS constant PASSWORD near the top of the script and update it.
-
-    Need me to customize the images/video placeholders now with specific filenames? Tell me the file names and I'll edit the HTML for you.
-  -->
-
+        function startHearts() {
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "💖";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = Math.random() * 20 + 20 + "px";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 6000);
+            }, 500);
+        }
+    </script>
 </body>
 </html>
