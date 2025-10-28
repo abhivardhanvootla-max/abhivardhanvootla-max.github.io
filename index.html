@@ -1,46 +1,213 @@
-<!-- ====== MAIN CONTENT ====== -->
-<div id="main-content" style="display:none; text-align:center; color:white;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Thachuu 💖</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+    }
 
-  <h1>Happy Birthday Rasi 💖</h1>
-  <p>With love from Abhi 💫</p>
+    /* Password Screen */
+    #password-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.3rem;
+      z-index: 10;
+    }
+    #password-screen input {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-top: 15px;
+      text-align: center;
+    }
+    #password-screen button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #ff69b4;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #password-screen button:hover {
+      background: #ff1493;
+    }
 
-  <!-- Background Music -->
-  <audio autoplay loop>
-    <source src="./assets/music.mp3" type="audio/mpeg">
-    Your browser does not support the audio tag.
-  </audio>
+    /* Slideshow Background */
+    #slideshow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+    .slide.active {
+      opacity: 1;
+    }
 
-  <!-- Video Section -->
-  <div style="margin: 20px 0;">
-    <video controls width="350" style="border-radius: 10px;">
-      <source src="./assets/video.mp4" type="video/mp4">
-      Your browser does not support the video tag.
+    /* Message */
+    #message {
+      position: absolute;
+      bottom: 20%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 2rem;
+      text-shadow: 2px 2px 8px black;
+      animation: fadeIn 2s ease;
+    }
+
+    /* Video */
+    #video-container {
+      position: absolute;
+      bottom: 5%;
+      width: 100%;
+      text-align: center;
+    }
+    #video-container video {
+      width: 80%;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    /* Heart Animation */
+    .heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      transform: rotate(45deg);
+      animation: floatUp 5s linear infinite;
+      left: calc(50% - 10px);
+    }
+    .heart::before, .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      border-radius: 50%;
+    }
+    .heart::before { top: -10px; left: 0; }
+    .heart::after { left: -10px; top: 0; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(-700px) rotate(45deg); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Password Screen -->
+  <div id="password-screen">
+    <h2>Enter the Password 💞</h2>
+    <input type="password" id="password" placeholder="Enter password..." />
+    <button onclick="checkPassword()">Enter</button>
+  </div>
+
+  <!-- Slideshow -->
+  <div id="slideshow">
+    <img src="assets/photo1.jpg" class="slide active">
+    <img src="assets/photo2.jpg" class="slide">
+    <img src="assets/photo3.jpg" class="slide">
+    <img src="assets/photo4.jpg" class="slide">
+    <img src="assets/photo5.jpg" class="slide">
+    <img src="assets/photo6.jpg" class="slide">
+    <img src="assets/photo7.jpg" class="slide">
+    <img src="assets/photo8.jpg" class="slide">
+  </div>
+
+  <!-- Message -->
+  <div id="message">Happy Birthday Thachuu 💖 Have a Great Year!</div>
+
+  <!-- Video -->
+  <div id="video-container">
+    <video controls>
+      <source src="assets/video.mp4" type="video/mp4">
     </video>
   </div>
 
-  <!-- Gallery Section -->
-  <div class="gallery" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
-    <img src="./assets/photo1.jpg" alt="Photo 1" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo2.jpg" alt="Photo 2" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo3.jpg" alt="Photo 3" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo4.jpg" alt="Photo 4" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo5.jpg" alt="Photo 5" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo6.jpg" alt="Photo 6" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo7.jpg" alt="Photo 7" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-    <img src="./assets/photo8.jpg" alt="Photo 8" style="width:200px; border-radius:15px; box-shadow:0 0 10px rgba(255,255,255,0.4);">
-  </div>
+  <!-- Background Music -->
+  <audio id="bg-music" src="assets/music.mp3" loop></audio>
 
-</div>
+  <script>
+    const correctPassword = "I M IDIOT";
+    const screen = document.getElementById('password-screen');
+    const music = document.getElementById('bg-music');
 
-<script>
-  const correctPassword = "I M IDIOT";
-  document.getElementById("enter-btn").addEventListener("click", function() {
-    const entered = document.getElementById("password-input").value;
-    if (entered === correctPassword) {
-      document.getElementById("password-screen").style.display = "none";
-      document.getElementById("main-content").style.display = "block";
-    } else {
-      alert("Wrong Password 😜 Try again!");
+    function checkPassword() {
+      const entered = document.getElementById('password').value;
+      if (entered === correctPassword) {
+        screen.style.display = 'none';
+        startSlideshow();
+        music.play().catch(() => console.log("Autoplay blocked"));
+        spawnHearts();
+      } else {
+        alert('Wrong password 💔');
+      }
     }
-  });
-</script>
+
+    // Slideshow Function
+    let current = 0;
+    function startSlideshow() {
+      const slides = document.querySelectorAll('.slide');
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, 3000); // change every 3s
+    }
+
+    // Floating hearts
+    function spawnHearts() {
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.background = `hsl(${Math.random() * 360}, 70%, 70%)`;
+        heart.style.animationDuration = 3 + Math.random() * 3 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }, 500);
+    }
+  </script>
+</body>
+</html>
