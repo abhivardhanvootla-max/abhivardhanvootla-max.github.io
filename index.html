@@ -1,234 +1,225 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Private — Thathsavi</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Thathsavi 💖</title>
 <style>
-  :root{
-    --bg1:#0b0710; --accent:#ff4da6; --card:#0f0b12; --muted:rgba(255,255,255,0.85);
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #000;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
   }
-  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;color:#fff;background:
-    linear-gradient(180deg,#120316 0,#2a0716 100%);-webkit-font-smoothing:antialiased;overflow:hidden}
-  /* Password screen */
-  #pw-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,#ffd3e6 0,#ff6aa9 100%);z-index:4000;padding:28px;gap:10px}
-  #pw-screen h1{color:#111;margin:0 0 6px;font-size:1.4rem}
-  #pw-input{padding:12px 14px;border-radius:10px;border:none;width:260px;text-align:center;font-size:16px}
-  #pw-btn{margin-top:6px;padding:10px 16px;border-radius:10px;border:none;background:#111;color:var(--accent);cursor:pointer}
-  #pw-hint{font-size:13px;color:#222;background:#fff;padding:6px 10px;border-radius:8px}
 
-  /* App layout */
-  #app{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+  #passwordScreen, #slideshow, #videoSection, #messageScreen {
+    display: none;
+    text-align: center;
+  }
 
-  /* Card */
-  .card{width:min(820px,92%);height:min(520px,66vh);border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden}
-  .card-inner{width:calc(100% - 48px);height:calc(100% - 48px);display:flex;align-items:center;justify-content:center;border-radius:12px;position:relative;background:rgba(0,0,0,0.2)}
-  .card img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,0.6);
-    transition: transform .7s cubic-bezier(.2,.9,.2,1), filter .5s; pointer-events:none; user-select:none}
-  .fallback{color:var(--muted);font-size:1rem;text-align:center;padding:12px}
+  #passwordScreen {
+    display: block;
+  }
 
-  /* transforms */
-  .effect-0{transform:translateY(0) scale(1) rotate(0deg)}
-  .effect-1{transform:translateY(-8px) scale(1.03) rotate(-1deg)}
-  .effect-2{transform:translateX(8px) scale(1.04) rotate(1deg)}
-  .effect-3{transform:translateY(6px) scale(1.02) rotate(-0.6deg)}
-  .effect-4{transform:translateX(-6px) scale(1.05) rotate(0.8deg)}
-  .effect-5{transform:translateY(-10px) scale(1.06) rotate(-1.2deg)}
-  .effect-6{transform:translateX(10px) scale(1.04) rotate(1.4deg)}
-  .effect-7{transform:translateY(8px) scale(1.03) rotate(-0.8deg)}
+  input[type="password"] {
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    margin-top: 15px;
+    text-align: center;
+  }
 
-  /* nav buttons */
-  .nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:12px;border:none;background:rgba(0,0,0,0.36);backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer}
-  .nav:active{transform:translateY(-50%) scale(.98)}
-  #prev{left:12px} #next{right:12px}
+  button {
+    background: #ff0077;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    margin-top: 15px;
+    cursor: pointer;
+  }
 
-  /* controls */
-  .controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px}
-  .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
-  .btn:active{transform:scale(.98)}
-  #page-info{min-width:140px;text-align:center;color:var(--muted)}
+  .card {
+    width: 80%;
+    max-width: 500px;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(255,255,255,0.3);
+    transition: transform 0.6s ease;
+  }
 
-  /* responsive */
-  @media (max-width:720px){
-    .card{height:58vh}
-    #pw-input{width:200px}
-    #page-info{min-width:110px;font-size:14px}
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .controls {
+    margin-top: 15px;
+  }
+
+  #videoPlayer {
+    width: 80%;
+    max-width: 700px;
+    border-radius: 10px;
+  }
+
+  #message {
+    width: 90%;
+    max-width: 700px;
+    font-size: 20px;
+    text-align: left;
+    white-space: pre-line;
+    line-height: 1.6;
+    border: 1px solid #ff0077;
+    border-radius: 10px;
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    box-shadow: 0 0 15px #ff0077;
   }
 </style>
 </head>
 <body>
-  <!-- Password -->
-  <div id="pw-screen" role="dialog" aria-modal="true">
-    <h1>Private — Enter Password</h1>
-    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
-    <button id="pw-btn">Enter</button>
-    <div id="pw-hint">(Keep it private)</div>
-  </div>
 
-  <!-- App -->
-  <div id="app" aria-hidden="true">
-    <div class="card" role="region" aria-label="Image card">
-      <div class="card-inner">
-        <img id="current-img" src="" alt="Photo" draggable="false" />
-        <div id="fallback" class="fallback" style="display:none">Image not available</div>
-      </div>
-      <button class="nav" id="prev" title="Previous (Left)">&larr;</button>
-      <button class="nav" id="next" title="Next (Right)">&rarr;</button>
-    </div>
+<!-- Password Screen -->
+<div id="passwordScreen">
+  <h2>Enter Password 💕</h2>
+  <input type="password" id="passwordInput" placeholder="Enter Password">
+  <button onclick="checkPassword()">Enter</button>
+  <p id="errorMsg" style="color:red; display:none;">Wrong password 😢</p>
+</div>
 
-    <div class="controls">
-      <button class="btn" id="first-btn">First</button>
-      <div id="page-info">Photo 0 / 0</div>
-      <button class="btn" id="last-btn">Last</button>
-      <button class="btn" id="play-video-btn">Play video after images</button>
-    </div>
+<!-- Image Slideshow -->
+<div id="slideshow">
+  <div class="card">
+    <img id="slideImage" src="assets/photo1.jpg" alt="Slide">
   </div>
+  <div class="controls">
+    <button onclick="prevImage()">⏮ Prev</button>
+    <button onclick="nextImage()">Next ⏭</button>
+  </div>
+</div>
+
+<!-- Video Section -->
+<div id="videoSection">
+  <video id="videoPlayer" controls autoplay></video>
+</div>
+
+<!-- Message Screen -->
+<div id="messageScreen">
+  <div id="message"></div>
+</div>
 
 <script>
-/* ---------- CONFIG: filenames (ensure these exist in assets/) ---------- */
-const images = [
-  'assets/photo1.jpg',
-  'assets/photo2.jpg',
-  'assets/photo3.jpg',
-  'assets/photo4.jpg',
-  'assets/photo5.jpg',
-  'assets/photo6.jpg',
-  'assets/photo7.jpg',
-  'assets/photo8.jpg'
-];
-const PASSWORD = "I AM IDIOT";
+  // Protection
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'PrintScreen') alert("Screen capture disabled");
+  });
 
-/* ---------- UI refs ---------- */
-const pwScreen = document.getElementById('pw-screen');
-const pwInput = document.getElementById('pw-input');
-const pwBtn = document.getElementById('pw-btn');
-const app = document.getElementById('app');
-const curImg = document.getElementById('current-img');
-const fallback = document.getElementById('fallback');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-const firstBtn = document.getElementById('first-btn');
-const lastBtn = document.getElementById('last-btn');
-const pageInfo = document.getElementById('page-info');
-const playVideoBtn = document.getElementById('play-video-btn');
+  const password = "I AM IDIOT";
+  const images = [
+    "assets/photo1.jpg",
+    "assets/photo2.jpg",
+    "assets/photo3.jpg",
+    "assets/photo4.jpg",
+    "assets/photo5.jpg",
+    "assets/photo6.jpg",
+    "assets/photo7.jpg",
+    "assets/photo8.jpg"
+  ];
+  const videos = [
+    "assets/part1.mp4",
+    "assets/part2.mp4",
+    "assets/part3.mp4",
+    "assets/part4.mp4",
+    "assets/part5.mp4",
+    "assets/part6.mp4",
+    "assets/part7.mp4"
+  ];
 
-/* ---------- state ---------- */
-let idx = 0;
+  let currentImage = 0;
 
-/* ---------- helpers ---------- */
-function updatePageInfo(){ pageInfo.textContent = `Photo ${idx+1} / ${images.length}`; }
-function showFallback(text){ fallback.textContent = text || 'Image not available'; fallback.style.display = 'block'; curImg.style.display = 'none'; }
-function hideFallback(){ fallback.style.display = 'none'; curImg.style.display = 'block'; }
-
-/* apply transform effect based on index */
-function applyEffect(el,i){
-  // remove previous effect classes
-  for(let n=0;n<8;n++) el.classList.remove('effect-'+n);
-  const c = 'effect-' + (i % 8);
-  el.classList.add(c);
-}
-
-/* set image robustly (adds cache-bust query to avoid stale cached bad version) */
-function setImage(i){
-  if(i<0) i=0;
-  if(i>=images.length) i = images.length-1;
-  idx = i;
-  updatePageInfo();
-  hideFallback();
-  curImg.style.opacity = '0';
-  // build URL with cache-bust token (helps if first upload was interrupted)
-  const base = images[idx];
-  const url = base + (base.includes('?') ? '&cb=' + Date.now() : '?cb=' + Date.now());
-  curImg.src = url;
-  curImg.alt = `Photo ${idx+1}`;
-  curImg.onload = () => {
-    curImg.style.filter = 'none';
-    curImg.style.opacity = '1';
-    applyEffect(curImg, idx);
-  };
-  curImg.onerror = () => {
-    console.warn('image load failed:', images[idx]);
-    // try without cache-bust (in case server blocks query)
-    if(curImg.src.endsWith('?cb=' + curImg.src.split('?cb=')[1])){
-      curImg.src = images[idx];
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value.trim();
+    if (input === password) {
+      document.getElementById("passwordScreen").style.display = "none";
+      document.getElementById("slideshow").style.display = "block";
+      showImage();
     } else {
-      showFallback(`Unable to load image ${idx+1}`);
+      document.getElementById("errorMsg").style.display = "block";
     }
-  };
-}
-
-/* ---------- navigation ---------- */
-prevBtn.addEventListener('click', ()=> { if(idx>0) setImage(idx-1); });
-nextBtn.addEventListener('click', ()=> { if(idx < images.length-1) setImage(idx+1); else { /* end reached - placeholder */ alert('Reached last image - use "Play video after images" to continue.'); } });
-firstBtn.addEventListener('click', ()=> setImage(0));
-lastBtn.addEventListener('click', ()=> setImage(images.length-1));
-playVideoBtn.addEventListener('click', ()=> alert('Video/play logic will be added in the next step (this base is working).'));
-
-/* keyboard navigation */
-document.addEventListener('keydown', (e)=>{
-  if(pwScreen.style.display !== 'none') return;
-  if(e.key === 'ArrowLeft') prevBtn.click();
-  if(e.key === 'ArrowRight') nextBtn.click();
-  if(e.key === 'Home') firstBtn.click();
-  if(e.key === 'End') lastBtn.click();
-});
-
-/* mobile swipe support */
-let touchStartX = 0;
-document.querySelector('.card-inner').addEventListener('touchstart', (e)=> { touchStartX = e.touches[0].clientX; }, {passive:true});
-document.querySelector('.card-inner').addEventListener('touchend', (e)=> {
-  const x = e.changedTouches[0].clientX;
-  const diff = x - touchStartX;
-  if(Math.abs(diff) > 40){
-    if(diff > 0) prevBtn.click(); else nextBtn.click();
   }
-}, {passive:true});
 
-/* ---------- preloads ---------- */
-function preloadImages(){ images.forEach(s=>{ const im = new Image(); im.src = s; }); }
-preloadImages();
-
-/* ---------- password logic ---------- */
-pwBtn.addEventListener('click', tryPassword);
-pwInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') tryPassword(); });
-
-function tryPassword(){
-  const val = pwInput.value.trim();
-  if(val === PASSWORD){
-    pwScreen.style.display = 'none';
-    app.style.display = 'flex';
-    setImage(0);
-    nextBtn.focus();
-  } else {
-    alert('Wrong password — try again.');
-    pwInput.value = '';
-    pwInput.focus();
+  function showImage() {
+    const img = document.getElementById("slideImage");
+    img.style.transform = "scale(0.8)";
+    setTimeout(() => {
+      img.src = images[currentImage];
+      img.onload = () => img.style.transform = "scale(1)";
+    }, 300);
   }
-}
 
-/* ---------- protections (best-effort) ---------- */
-/* disable right click */
-document.addEventListener('contextmenu', e => e.preventDefault());
-/* disable drag */
-document.addEventListener('dragstart', e => { if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault(); }, false);
-/* block common shortcuts */
-document.addEventListener('keydown', (e)=> {
-  if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase()==='s' || e.key.toLowerCase()==='u' || e.key==='F12')){ e.preventDefault(); alert('This content is private.'); }
-  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='p'){ e.preventDefault(); alert('Printing disabled.'); }
-});
+  function nextImage() {
+    if (currentImage < images.length - 1) {
+      currentImage++;
+      showImage();
+    } else {
+      document.getElementById("slideshow").style.display = "none";
+      playVideos();
+    }
+  }
 
-/* small accessibility: hide app until password */
-app.style.display = 'none';
+  function prevImage() {
+    if (currentImage > 0) {
+      currentImage--;
+      showImage();
+    }
+  }
 
-/* ---------- troubleshooting helpers (in-page) ---------- */
-/* If photo1 fails, this helps detect filename issues */
-function checkAssetList(){
-  console.log('Expecting images:', images);
-}
-checkAssetList();
+  function playVideos() {
+    document.getElementById("videoSection").style.display = "block";
+    const videoPlayer = document.getElementById("videoPlayer");
+    let index = 0;
+    videoPlayer.src = videos[index];
+    videoPlayer.play();
+
+    videoPlayer.addEventListener("ended", () => {
+      index++;
+      if (index < videos.length) {
+        videoPlayer.src = videos[index];
+        videoPlayer.play();
+      } else {
+        document.getElementById("videoSection").style.display = "none";
+        showMessageScreen();
+      }
+    });
+  }
+
+  function showMessageScreen() {
+    document.getElementById("messageScreen").style.display = "block";
+    const text = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi...
+[rest of your full message goes here, copy-paste full text]`;
+    const messageEl = document.getElementById("message");
+    let i = 0;
+    function typing() {
+      if (i < text.length) {
+        messageEl.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typing, 30);
+      }
+    }
+    typing();
+  }
 </script>
 </body>
 </html>
