@@ -1,477 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Private Surprise — Thachuu 💖</title>
-<style>
-  :root{
-    --accent:#ff5aa8;
-    --accent-dark:#ff2f86;
-    --bg:#0b0510;
-    --text: #fff;
-  }
-  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,Helvetica,sans-serif;overflow:hidden;}
-  /* Password screen */
-  #pw-screen{
-    position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;
-    background:linear-gradient(135deg,#ffccd9,#ff8fcf);z-index:50;
-  }
-  #pw-screen h2{font-size:1.8rem;margin-bottom:6px;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.25)}
-  #pw-input{padding:12px 14px;border-radius:10px;border:0;width:260px;font-size:1rem;text-align:center;outline:none}
-  #pw-btn{margin-top:12px;padding:10px 18px;border-radius:10px;background:#fff;color:var(--accent-dark);border:0;font-weight:700;cursor:pointer}
-  #pw-hint{margin-top:10px;color:#fff8; font-size:.9rem}
-
-  /* slideshow container (full screen) */
-  #stage{position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,#0b0510 0%, #100217 60%);display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .9s ease;pointer-events:none}
-  .slide.visible{opacity:1;pointer-events:auto;z-index:5}
-  .slide img{max-width:92vw;max-height:86vh;object-fit:contain;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-  .slide .video-wrap{width:90%;max-width:1000px;}
-  video[playsinline]{width:100%;height:auto;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-  /* text slide */
-  .text-card{max-width:900px;width:90%;background:rgba(0,0,0,0.35);backdrop-filter:blur(6px);padding:28px;border-radius:14px;color:#fff;box-shadow:0 12px 40px rgba(0,0,0,.6)}
-  .text-card p{line-height:1.55;font-size:1.05rem;white-space:pre-wrap;overflow:auto;max-height:60vh}
-
-  /* controls overlay (unmute button, next) */
-  .controls{
-    position:fixed;right:18px;top:18px;z-index:60;display:flex;gap:10px;
-  }
-  .btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:10px 12px;border-radius:999px;color:#fff;cursor:pointer;backdrop-filter:blur(6px)}
-  .btn:hover{background:rgba(255,255,255,0.18)}
-
-  /* watermark (moves a little) */
-  .watermark{
-    position:fixed;left:10px;bottom:12px;color:rgba(255,255,255,0.12);font-weight:700;font-size:0.9rem;z-index:60;pointer-events:none;
-    transform:rotate(-10deg);text-shadow:0 6px 18px rgba(0,0,0,0.6);
-  }
-
-  /* top-left small notice (private) */
-  .tag{position:fixed;left:18px;top:18px;background:linear-gradient(90deg,var(--accent),var(--accent-dark));padding:8px 12px;border-radius:999px;color:#fff;font-weight:700;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.45)}
-
-  /* disable selection */
-  *{user-select:none;-webkit-user-select:none; -ms-user-select:none}
-  /* hide scrollbars if any */
-  ::-webkit-scrollbar{display:none}
-  /* responsive */
-  @media (max-width:600px){
-    #pw-input{width:200px}
-    .text-card{padding:18px;font-size:.95rem}
-    .watermark{font-size:.8rem}
-  }
-</style>
-</head>
-<body>
-  <!-- password -->
-  <div id="pw-screen" aria-label="password-screen">
-    <h2>Secret Page — Enter Password</h2>
-    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
-    <button id="pw-btn">Enter</button>
-    <div id="pw-hint">This page is private — for Rasi only 💌</div>
-  </div>
-
-  <!-- top tag -->
-  <div class="tag">Private — Do not share</div>
-
-  <!-- watermark (rotates/moves slightly to discourage screenshots) -->
-  <div class="watermark" id="wm">Thachuu ❤ private</div>
-
-  <!-- controls -->
-  <div class="controls">
-    <button class="btn" id="prevBtn" title="Previous slide">◀</button>
-    <button class="btn" id="nextBtn" title="Next slide">▶</button>
-    <button class="btn" id="unmuteBtn" title="Unmute videos (if needed)">🔊 Unmute</button>
-  </div>
-
-  <!-- main stage -->
-  <div id="stage" aria-hidden="true">
-    <!-- image slides -->
-    <div class="slide" id="s-img1"><img src="assets/photo1.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img2"><img src="assets/photo2.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img3"><img src="assets/photo3.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img4"><img src="assets/photo4.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img5"><img src="assets/photo5.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img6"><img src="assets/photo6.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img7"><img src="assets/photo7.jpg" draggable="false" /></div>
-    <div class="slide" id="s-img8"><img src="assets/photo8.jpg" draggable="false" /></div>
-
-    <!-- video slides (muted autoplay to guarantee playback) -->
-    <div class="slide" id="s-vid1"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid1.mp4"></video></div></div>
-    <div class="slide" id="s-vid2"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid2.mp4"></video></div></div>
-    <div class="slide" id="s-vid3"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid3.mp4"></video></div></div>
-    <div class="slide" id="s-vid4"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid4.mp4"></video></div></div>
-    <div class="slide" id="s-vid5"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid5.mp4"></video></div></div>
-    <div class="slide" id="s-vid6"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid6.mp4"></video></div></div>
-    <div class="slide" id="s-vid7"><div class="video-wrap"><video playsinline muted controls controlsList="nodownload nofullscreen noremoteplayback" preload="auto" src="assets/vid7.mp4"></video></div></div>
-
-    <!-- text slide (typing animation will run when shown) -->
-    <div class="slide" id="s-text">
-      <div class="text-card" role="article" aria-live="polite">
-        <p id="long-text">
-<!-- Replace this placeholder text with the message you want. Keep line breaks as desired. -->
-Happy birthday Thachuu — Have a wonderful year filled with love, laughter and dreams coming true. You are the light of my life and I wish you all the happiness today and always. — Love, Abhi
-        </p>
-      </div>
-    </div>
-  </div>
-
-<script>
-/*  ====== CONFIG ====== */
-const PASSWORD = "IAMANIDIOT";           // password (as requested)
-const IMAGE_DELAY = 4000;               // ms show each image
-const WATERMARK_MOVE_MS = 1600;         // watermark jitter interval
-
-/* ====== STATE ====== */
-let slideOrder = [];   // will be filled with slide elements in order
-let currentIndex = 0;
-let slideTimer = null;
-let playing = false;
-
-/* ====== HELPERS ====== */
-function qs(sel){return document.querySelector(sel)}
-function qsa(sel){return Array.from(document.querySelectorAll(sel))}
-
-/* prepare ordered slides: images (1..8), videos (1..7), text */
-function prepareSlides(){
-  slideOrder = [
-    's-img1','s-img2','s-img3','s-img4','s-img5','s-img6','s-img7','s-img8',
-    's-vid1','s-vid2','s-vid3','s-vid4','s-vid5','s-vid6','s-vid7',
-    's-text'
-  ].map(id => qs('#'+id)).filter(Boolean);
-}
-
-/* show specific index (clears timers, pauses videos) */
-function showSlide(index){
-  if(!slideOrder.length) return;
-  // clamp
-  index = (index + slideOrder.length) % slideOrder.length;
-  // hide all
-  slideOrder.forEach(s => s.classList.remove('visible'));
-  // pause all videos
-  qsa('video').forEach(v => { try{ v.pause(); v.currentTime = 0; }catch(e){} });
-  // set current
-  currentIndex = index;
-  const el = slideOrder[currentIndex];
-  el.classList.add('visible');
-
-  // if it's an image slide -> set timer to advance
-  if(el.querySelector('img')){
-    clearTimeout(slideTimer);
-    slideTimer = setTimeout(()=> showSlide(currentIndex+1), IMAGE_DELAY);
-  } else if(el.querySelector('video')){
-    // autoplay muted; when video ends -> next slide
-    const vid = el.querySelector('video');
-    vid.play().catch(()=>{/* autoplay blocked, user can press play */});
-    vid.onended = ()=> setTimeout(()=>showSlide(currentIndex+1),300);
-  } else {
-    // text slide -> no timer (leave for 8s then end)
-    clearTimeout(slideTimer);
-    slideTimer = setTimeout(()=> showSlide(currentIndex+1), 8000);
-  }
-}
-
-/* button controls */
-function prevSlide(){ showSlide(currentIndex-1) }
-function nextSlide(){ showSlide(currentIndex+1) }
-
-/* unmute all videos (user action) */
-function unmuteAll(){
-  qsa('video').forEach(v=>{ v.muted = false; try{ v.play(); }catch(e){} });
-  qs('#unmuteBtn').textContent = '🔊 Unmuted';
-}
-
-/* password check */
-function unlockIfCorrect(){
-  const val = qs('#pw-input').value || '';
-  if(val.trim() === PASSWORD){
-    qs('#pw-screen').style.display = 'none';
-    document.getElementById('stage').setAttribute('aria-hidden','false');
-    startPresentation();
-  } else {
-    alert('Wrong password — try again.');
-  }
-}
-
-/* start presentation */
-function startPresentation(){
-  prepareSlides();
-  showSlide(0);
-  playing = true;
-  startWatermarkMotion();
-  startTypingIfNeeded();
-}
-
-/* typing animation for long text (simple: reveal letters) */
-function startTypingIfNeeded(){
-  const textP = qs('#long-text');
-  if(!textP) return;
-  const full = textP.textContent.trim();
-  // keep a copy to restore
-  textP.textContent = '';
-  let i = 0;
-  const speed = 24; // ms per char (fast)
-  const reveal = setInterval(()=>{
-    i++;
-    textP.textContent = full.slice(0,i);
-    if(i>=full.length) clearInterval(reveal);
-  }, speed);
-}
-
-/* watermark jitter to make screenshots messy */
-function startWatermarkMotion(){
-  const w = qs('#wm');
-  setInterval(()=>{
-    const left = 6 + Math.random()*60;
-    const bottom = 6 + Math.random()*20;
-    const rotate = -14 + Math.random()*12;
-    w.style.left = left+'px';
-    w.style.bottom = bottom+'px';
-    w.style.transform = `rotate(${rotate}deg)`;
-    w.textContent = `Private — ${new Date().getFullYear()} • Thachuu ❤`;
-  }, WATERMARK_MOVE_MS);
-}
-
-/* ====== PROTECTION (deterrents) ====== */
-/* block right click everywhere */
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-/* prevent common keys: F12, Ctrl+Shift+I, Ctrl+S, Ctrl+U, PrintScreen (best-effort) */
-document.addEventListener('keydown', e => {
-  if(e.key === 'F12') e.preventDefault();
-  if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) e.preventDefault();
-  if(e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); alert('Saving is disabled on this private page.'); }
-  if(e.ctrlKey && (e.key === 'u' || e.key === 'U')) e.preventDefault();
-  // prevent PrintScreen by clearing clipboard (best-effort; not reliable)
-  if(e.key === 'PrintScreen'){ try{ navigator.clipboard && navigator.clipboard.writeText(''); }catch(e){} }
-});
-
-/* prevent dragging images */
-document.addEventListener('dragstart', e => e.preventDefault());
-
-/* overlay blocker on media to make saving harder: pointer events off only for underlying media */
-qsa('img, video').forEach(el=>{
-  // add invisible overlay to intercept right-click/save attempts
-  const overlay = document.createElement('div');
-  overlay.style.position='absolute';
-  overlay.style.inset=0;
-  overlay.style.zIndex=9;
-  overlay.style.pointerEvents='auto'; // intercept clicks
-  overlay.style.background='transparent';
-  overlay.oncontextmenu = e => e.preventDefault();
-  // place overlay in parent slide
-  el.parentElement.style.position = 'relative';
-  el.parentElement.appendChild(overlay);
-});
-
-/* remove direct file links from keyboard (block ctrl+P print) */
-window.addEventListener('beforeprint', e => { e.preventDefault(); alert('Printing is disabled for this private page.'); });
-
-/* attach UI buttons */
-qs('#pw-btn').addEventListener('click', unlockIfCorrect);
-qs('#pw-input').addEventListener('keydown', e=>{ if(e.key === 'Enter') unlockIfCorrect(); });
-qs('#prevBtn').addEventListener('click', ()=>{ if(playing) prevSlide(); });
-qs('#nextBtn').addEventListener('click', ()=>{ if(playing) nextSlide(); });
-qs('#unmuteBtn').addEventListener('click', unmuteAll);
-
-/* prevent developer tools open via right key combos (best-effort) */
-(function(){ const block = e => { if(e.key==='F12' || (e.ctrlKey && e.shiftKey && e.key==='I')) e.preventDefault(); }; window.addEventListener('keydown', block); })();
-
-</script>
-</body>
-</html>      border: none;
-      outline: none;
-      margin-top: 15px;
-      text-align: center;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Birthday Surprise — Private</title>
+  <style>
+    :root{
+      --bg1: #0f0710;
+      --card-bg: rgba(255,255,255,0.03);
+      --accent: #ff4da6;
+      --muted: rgba(255,255,255,0.8);
     }
-    #password-screen button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #ff69b4;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#130017 0,#2b071b 100%);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#fff;overflow:hidden}
+    /* Password screen */
+    #pw-screen{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:2000;
+      background: radial-gradient(circle at 30% 20%, rgba(255,77,166,0.12), transparent 15%), linear-gradient(135deg,#ffb6d9 0,#ff6aa9 100%);
+      gap:12px;padding:32px;
     }
-    #password-screen button:hover {
-      background: #ff1493;
+    #pw-screen h2{font-size:1.6rem;margin:0;color:#111}
+    #pw-input{padding:12px 14px;border-radius:10px;border:none;font-size:1rem;width:260px;text-align:center}
+    #pw-btn{padding:10px 18px;border-radius:10px;border:none;background:#111;color:var(--accent);font-weight:600;cursor:pointer}
+    /* Layout */
+    #app{
+      position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;
     }
 
-    /* Slideshow */
-    #slideshow {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      background: black;
-      z-index: 1;
-    }
-    .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: black;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-    }
-    .slide.active {
-      opacity: 1;
+    /* Card style image viewer */
+    .card {
+      width: min(760px, 92%);
+      height: min(460px, 64vh);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      position:relative;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* Typing Message */
-    #message {
-      position: absolute;
-      bottom: 25%;
-      width: 100%;
-      text-align: center;
-      color: white;
-      font-size: 2rem;
-      text-shadow: 2px 2px 8px black;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 3px solid white;
-      width: 0;
-      margin: 0 auto;
-      animation: typing 4s steps(40, end) forwards, blink 0.7s step-end infinite;
-      z-index: 2;
+    .card-inner{
+      width: calc(100% - 48px);
+      height: calc(100% - 48px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.25);
+      position:relative;
     }
 
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
+    /* Images - keep aspect ratio, do not stretch */
+    .card img{
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain; /* preserves aspect ratio; no stretch */
+      user-drag: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      transform-origin:center center;
+      transition: transform 700ms cubic-bezier(.2,.9,.2,1), filter 600ms;
+      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.6));
+      background: radial-gradient(circle at center, rgba(255,255,255,0.02), transparent 40%);
     }
 
-    @keyframes blink {
-      50% { border-color: transparent; }
+    /* Buttons */
+    .nav {
+      position:absolute; top:50%; transform:translateY(-50%); width:48px;height:48px;border-radius:10px;border:none;background:rgba(0,0,0,0.35);backdrop-filter: blur(4px); color:white; cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-size:20px;
+    }
+    .nav:active{transform:translateY(-50%) scale(.98)}
+    #prev{left:12px}
+    #next{right:12px}
+
+    /* Info / footer controls */
+    .controls {
+      margin-top:18px; display:flex; gap:12px; align-items:center; justify-content:center;
+    }
+    .btn{
+      padding:8px 14px;border-radius:10px;border:none;background:transparent;color:var(--muted);cursor:pointer;border:1px solid rgba(255,255,255,0.06)
+    }
+    .btn:active{transform:scale(.98)}
+
+    /* Video container (hidden until images finished) */
+    #video-wrap{
+      display:none; margin-top:18px; width: min(820px,92%); text-align:center;
+    }
+    video{
+      width:100%; max-height:60vh; border-radius:14px; background:black; outline:none; box-shadow:0 10px 30px rgba(0,0,0,0.5)
     }
 
-    /* Video */
-    #video-container {
-      position: absolute;
-      bottom: 5%;
-      width: 100%;
-      text-align: center;
-      z-index: 2;
+    /* Message screen */
+    #message-screen{
+      display:none; position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(10,2,10,0.7)); z-index:1500;
+      display:flex;align-items:center;justify-content:center;padding:40px;
     }
-    #video-container video {
-      width: 70%;
-      max-width: 600px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    #message-card{
+      width:min(900px,95%); max-height:85vh; overflow:auto; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:28px; border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,0.6)
+    }
+    #message-text{
+      color:#fff; font-size:1.05rem; line-height:1.8rem; white-space:pre-wrap; font-family:Georgia, 'Times New Roman', serif;
     }
 
-    /* Heart Animation */
-    .heart {
-      position: fixed;
-      width: 15px;
-      height: 15px;
-      background: pink;
-      transform: rotate(45deg);
-      animation: floatUp 5s linear infinite;
-      left: calc(50% - 10px);
-      z-index: 0;
-    }
-    .heart::before, .heart::after {
-      content: '';
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background: pink;
-      border-radius: 50%;
-    }
-    .heart::before { top: -7px; left: 0; }
-    .heart::after { left: -7px; top: 0; }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
-      100% { transform: translateY(-700px) rotate(45deg); opacity: 0; }
+    /* small helpers */
+    .hidden{display:none !important}
+    /* responsive */
+    @media (max-width:720px){
+      .card{height:56vh}
+      #message{font-size:1.4rem; bottom:28%}
+      #pw-input{width:200px}
     }
   </style>
 </head>
-<body>
-  <!-- Password Screen -->
-  <div id="password-screen">
-    <h2>Enter the Password 💞</h2>
-    <input type="password" id="password" placeholder="Enter password..." />
-    <button onclick="checkPassword()">Enter</button>
+<body translate="no" oncontextmenu="return false;">
+
+  <!-- PASSWORD -->
+  <div id="pw-screen" aria-hidden="false">
+    <h2>Enter Password to Open 💌</h2>
+    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
+    <div style="display:flex;gap:10px;align-items:center">
+      <button id="pw-btn">Enter</button>
+    </div>
+    <small style="color:#111; margin-top:12px; background:white;padding:6px 10px;border-radius:8px;">(private — do not share)</small>
   </div>
 
-  <!-- Slideshow -->
-  <div id="slideshow">
-    <img src="assets/photo1.jpg" class="slide active">
-    <img src="assets/photo2.jpg" class="slide">
-    <img src="assets/photo3.jpg" class="slide">
-    <img src="assets/photo4.jpg" class="slide">
-    <img src="assets/photo5.jpg" class="slide">
-    <img src="assets/photo6.jpg" class="slide">
-    <img src="assets/photo7.jpg" class="slide">
-    <img src="assets/photo8.jpg" class="slide">
+  <!-- APP -->
+  <div id="app" aria-hidden="true">
+    <div class="card" role="region" aria-label="Image card">
+      <div class="card-inner" id="card-inner">
+        <!-- image will be injected here -->
+        <img id="current-img" src="" alt="Photo" draggable="false" />
+      </div>
+
+      <button class="nav" id="prev" title="Previous (Left arrow)">&larr;</button>
+      <button class="nav" id="next" title="Next (Right arrow)">&rarr;</button>
+    </div>
+
+    <div class="controls" id="controls">
+      <button class="btn" id="first-btn">First</button>
+      <div id="page-info" style="min-width:120px; text-align:center; color:var(--muted)"></div>
+      <button class="btn" id="last-btn">Last</button>
+      <button class="btn" id="play-video-btn">Play video after images</button>
+    </div>
+
+    <div id="video-wrap" aria-hidden="true">
+      <video id="video-player" controls controlsList="nodownload" playsinline webkit-playsinline poster="" crossorigin="anonymous"></video>
+    </div>
   </div>
 
-  <!-- Message -->
-  <div id="message">Happy Birthday Thachuu 💖 Have a Great Year!</div>
-
-  <!-- Video -->
-  <div id="video-container">
-    <video controls>
-      <source src="assets/video.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+  <!-- Message screen (separate) -->
+  <div id="message-screen" aria-hidden="true">
+    <div id="message-card">
+      <div id="message-text"></div>
+    </div>
   </div>
-
-  <!-- Background Music -->
-  <audio id="bg-music" src="assets/music.mp3" loop></audio>
 
   <script>
-    const correctPassword = "I M IDIOT";
-    const screen = document.getElementById('password-screen');
-    const music = document.getElementById('bg-music');
+  /***** CONFIG — change these names if your files are different *****/
+  const images = [
+    'assets/photo1.jpg',
+    'assets/photo2.jpg',
+    'assets/photo3.jpg',
+    'assets/photo4.jpg',
+    'assets/photo5.jpg',
+    'assets/photo6.jpg',
+    'assets/photo7.jpg',
+    'assets/photo8.jpg'
+  ];
+  const videos = [
+    'assets/part1.mp4',
+    'assets/part2.mp4',
+    'assets/part3.mp4',
+    'assets/part4.mp4',
+    'assets/part5.mp4',
+    'assets/part6.mp4',
+    'assets/part7.mp4'
+  ];
+  const PASSWORD = "I AM IDIOT"; // exact password
+  const longMessage = `Happy birthday Thachuu — Rasi!
+Wishing you the happiest year ahead. May your days be filled with laughter, success, and the little moments that make life beautiful.
+Thank you for being you. Love, Abhi.`; // can be longer
 
-    function checkPassword() {
-      const entered = document.getElementById('password').value.trim();
-      if (entered === correctPassword) {
-        screen.style.display = 'none';
-        startSlideshow();
-        spawnHearts();
-        startTyping();
-        music.play().catch(() => {
-          console.log("Autoplay blocked — user must tap screen once to start music.");
-        });
-      } else {
-        alert('Wrong password 💔');
+  /***** UI elements *****/
+  const pwScreen = document.getElementById('pw-screen');
+  const pwInput = document.getElementById('pw-input');
+  const pwBtn = document.getElementById('pw-btn');
+  const app = document.getElementById('app');
+  const currentImg = document.getElementById('current-img');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const firstBtn = document.getElementById('first-btn');
+  const lastBtn = document.getElementById('last-btn');
+  const pageInfo = document.getElementById('page-info');
+  const playVideoBtn = document.getElementById('play-video-btn');
+  const videoWrap = document.getElementById('video-wrap');
+  const videoPlayer = document.getElementById('video-player');
+  const messageScreen = document.getElementById('message-screen');
+  const messageText = document.getElementById('message-text');
+
+  /* state */
+  let index = 0;
+  let slideAnimating = false;
+  let videoIndex = 0;
+  let autoplayVideoAfterImages = false;
+
+  /* initialize */
+  function updatePageInfo(){
+    pageInfo.textContent = `Photo ${index+1} / ${images.length}`;
+  }
+
+  function setImage(i, withTransform=true){
+    if(i < 0 || i >= images.length) return;
+    index = i;
+    updatePageInfo();
+    // set src
+    currentImg.style.opacity = 0;
+    // small delay to allow CSS transition
+    setTimeout(()=>{
+      currentImg.src = images[index];
+      currentImg.alt = `Photo ${index+1}`;
+      currentImg.onload = () => {
+        // apply transform animation for this image
+        if(withTransform) applyTransformToImage(currentImg, index);
+        currentImg.style.opacity = 1;
+      };
+      currentImg.onerror = () => {
+        // show a simple fallback visual if image fails
+        currentImg.style.opacity = 1;
+        currentImg.src = '';
+        currentImg.alt = `Unable to load photo ${index+1}`;
+        currentImg.style.filter = 'grayscale(80%)';
+      };
+    }, 130);
+  }
+
+  function applyTransformToImage(imgElement, idx){
+    // create a visually different transform per index: scale + rotate + translate subtle
+    const transforms = [
+      'translateY(0) scale(1) rotate(0deg)',
+      'translateY(-6px) scale(1.02) rotate(-1deg)',
+      'translateX(6px) scale(1.03) rotate(1deg)',
+      'translateY(6px) scale(1.02) rotate(-0.6deg)',
+      'translateX(-6px) scale(1.04) rotate(0.8deg)',
+      'translateY(-10px) scale(1.05) rotate(-1.2deg)',
+      'translateX(10px) scale(1.03) rotate(1.6deg)',
+      'translateY(8px) scale(1.02) rotate(-0.8deg)'
+    ];
+    const t = transforms[idx % transforms.length];
+    // briefly set stronger transform then settle for subtle parallax
+    imgElement.style.transform = 'scale(.96) rotate(0deg)';
+    setTimeout(()=> imgElement.style.transform = t, 40);
+  }
+
+  /* navigation */
+  prevBtn.addEventListener('click', ()=>{
+    if(index > 0) setImage(index - 1);
+  });
+  nextBtn.addEventListener('click', ()=>{
+    if(index < images.length - 1) {
+      setImage(index + 1);
+    } else {
+      // finished viewing images
+      onImagesCompleted();
+    }
+  });
+  firstBtn.addEventListener('click', ()=> setImage(0));
+  lastBtn.addEventListener('click', ()=> setImage(images.length - 1));
+  // keyboard navigation
+  document.addEventListener('keydown', (e)=>{
+    if(app.style.display === 'none' || pwScreen.style.display !== 'none') return;
+    if(e.key === 'ArrowLeft') prevBtn.click();
+    if(e.key === 'ArrowRight') nextBtn.click();
+    if(e.key === 'Home') firstBtn.click();
+    if(e.key === 'End') lastBtn.click();
+  });
+
+  // play video button
+  playVideoBtn.addEventListener('click', ()=> {
+    onImagesCompleted();
+  });
+
+  /* images finished -> show video area and auto-start video sequence */
+  function onImagesCompleted(){
+    // show video controls and start playing sequence
+    videoWrap.style.display = 'block';
+    autoplayVideoAfterImages = true;
+    startVideoSequence();
+    // scroll focus to video
+    videoPlayer.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  /* video playback: play each part sequentially */
+  function startVideoSequence(){
+    videoPlayer.pause();
+    videoIndex = 0;
+    if(!videos || videos.length === 0) {
+      // go directly to message screen
+      goToMessageScreen();
+      return;
+    }
+    videoPlayer.src = videos[videoIndex];
+    try { videoPlayer.load(); } catch(e){}
+    videoPlayer.play().catch(err=>{
+      // autoplay often blocked; show play hint
+      console.log('Autoplay blocked - user must press play', err);
+      // show subtle overlay or keep controls visible and instruct user to press play
+    });
+  }
+
+  // advance to next video part when one ends
+  videoPlayer.addEventListener('ended', ()=>{
+    videoIndex++;
+    if(videoIndex < videos.length){
+      videoPlayer.src = videos[videoIndex];
+      videoPlayer.load();
+      videoPlayer.play().catch(()=>{/* user must click if autoplay blocked */});
+    } else {
+      // video sequence finished -> move to message screen
+      goToMessageScreen();
+    }
+  });
+
+  /***** PASSWORD logic *****/
+  pwBtn.addEventListener('click', enterPassword);
+  pwInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') enterPassword();
+  });
+
+  function enterPassword(){
+    const val = pwInput.value.trim();
+    if(val === PASSWORD){
+      // unlock
+      pwScreen.style.display = 'none';
+      app.style.display = 'flex';
+      app.setAttribute('aria-hidden','false');
+      // show first image
+      setImage(0);
+      // focus for keyboard nav
+      nextBtn.focus();
+    } else {
+      alert('Wrong password. Try again.');
+      pwInput.value = '';
+      pwInput.focus();
+    }
+  }
+
+  /* Message screen: typing effect */
+  function goToMessageScreen(){
+    // hide main UI, show message screen overlay
+    messageScreen.style.display = 'flex';
+    messageScreen.setAttribute('aria-hidden','false');
+    // type the message realistically
+    typeText(longMessage, messageText, 20, 90);
+  }
+
+  function typeText(textElOrString, container, minDelay=20, maxDelay=90){
+    const text = (typeof textElOrString === 'string') ? textElOrString : textElOrString.textContent || '';
+    container.textContent = '';
+    let i = 0;
+    function step(){
+      if(i >= text.length) {
+        // finish typing
+        container.style.borderRight = 'none';
+        return;
       }
+      const ch = text[i++];
+      container.textContent += ch;
+      // create natural pauses for punctuation
+      let delay = Math.random()*(maxDelay-minDelay)+minDelay;
+      if(ch === ',' ) delay += 120;
+      if(ch === '.' || ch === '!' || ch === '?') delay += 300;
+      setTimeout(step, delay);
     }
+    step();
+  }
 
-    // Slideshow Function
-    let current = 0;
-    function startSlideshow() {
-      const slides = document.querySelectorAll('.slide');
-      setInterval(() => {
-        slides[current].classList.remove('active');
-        current = (current + 1) % slides.length;
-        slides[current].classList.add('active');
-      }, 3000);
-    }
+  /***** Prevent easy downloads & basic anti-capture measures *****/
+  // disable right click
+  document.addEventListener('contextmenu', (e)=> e.preventDefault());
+  // disable drag of images
+  document.addEventListener('dragstart', (e)=> {
+    if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
+  }, false);
 
-    // Floating hearts
-    function spawnHearts() {
-      setInterval(() => {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.background = `hsl(${Math.random() * 360}, 70%, 70%)`;
-        heart.style.animationDuration = 3 + Math.random() * 3 + 's';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 5000);
-      }, 500);
-    }
+  // set video attribute to suggest no download (not foolproof)
+  videoPlayer.setAttribute('controlsList','nodownload');
 
-    // Typing Animation Start Delay
-    function startTyping() {
-      const message = document.getElementById('message');
-      message.style.animation = 'typing 4s steps(40, end) forwards, blink 0.7s step-end infinite';
+  // attempt to detect PrintScreen; cannot truly block OS-level screen capture
+  // but we try to obfuscate quickly and show a warning (temporary blur)
+  document.addEventListener('keyup', (e)=>{
+    // keyCode 44 is PrintScreen on some systems
+    if(e.key === 'PrintScreen' || e.keyCode === 44){
+      // briefly blur main content and show overlay text
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.backdropFilter = 'blur(6px)';
+      overlay.style.background = 'rgba(0,0,0,0.35)';
+      overlay.style.zIndex = 9999;
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.color = '#fff';
+      overlay.style.fontSize = 'clamp(16px,2vw,22px)';
+      overlay.textContent = 'Screen capture detected — this content is private.';
+      document.body.appendChild(overlay);
+      setTimeout(()=> overlay.remove(), 1200);
+      // also try to clear clipboard (best-effort)
+      try{ navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
     }
+  });
+
+  // detect common fullscreen/capture shortcuts (not exhaustive)
+  document.addEventListener('keydown', (e)=>{
+    // block Ctrl+S, Ctrl+U, Ctrl+Shift+I, Ctrl+P
+    if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 's' || e.key.toLowerCase() === 'u' || e.key.toLowerCase() === 'p')) {
+      e.preventDefault(); alert('Saving/printing disabled for privacy.');
+    }
+    if(e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j')) {
+      e.preventDefault();
+    }
+  });
+
+  /* Prevent image context menu / save on long touch mobile */
+  currentImg.addEventListener('touchstart', (e)=> e.preventDefault(), {passive:false});
+
+  /* Accessibility: hide heavy elements until password */
+  app.style.display = 'none';
+
+  // final safety: if images exist but not loaded yet, preload quietly to avoid flicker
+  function preloadAll(){
+    images.forEach(src => {
+      const im = new Image();
+      im.src = src;
+    });
+    videos.forEach(src => {
+      // do not preload large video parts automatically (avoid bandwidth); only light probe
+      // create but don't download fully; browser will handle on demand
+    });
+  }
+  // preload image thumbnails (light)
+  preloadAll();
+
+  // End of script
   </script>
 </body>
 </html>
