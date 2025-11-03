@@ -1,453 +1,365 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Birthday Surprise — Private</title>
-  <style>
-    :root{
-      --bg1: #0f0710;
-      --card-bg: rgba(255,255,255,0.03);
-      --accent: #ff4da6;
-      --muted: rgba(255,255,255,0.8);
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#130017 0,#2b071b 100%);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#fff;overflow:hidden}
-    /* Password screen */
-    #pw-screen{
-      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:2000;
-      background: radial-gradient(circle at 30% 20%, rgba(255,77,166,0.12), transparent 15%), linear-gradient(135deg,#ffb6d9 0,#ff6aa9 100%);
-      gap:12px;padding:32px;
-    }
-    #pw-screen h2{font-size:1.6rem;margin:0;color:#111}
-    #pw-input{padding:12px 14px;border-radius:10px;border:none;font-size:1rem;width:260px;text-align:center}
-    #pw-btn{padding:10px 18px;border-radius:10px;border:none;background:#111;color:var(--accent);font-weight:600;cursor:pointer}
-    /* Layout */
-    #app{
-      position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;
-    }
-
-    /* Card style image viewer */
-    .card {
-      width: min(760px, 92%);
-      height: min(460px, 64vh);
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      border-radius: 18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      position:relative;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .card-inner{
-      width: calc(100% - 48px);
-      height: calc(100% - 48px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius: 14px;
-      background: rgba(0,0,0,0.25);
-      position:relative;
-    }
-
-    /* Images - keep aspect ratio, do not stretch */
-    .card img{
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain; /* preserves aspect ratio; no stretch */
-      user-drag: none;
-      user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-      transform-origin:center center;
-      transition: transform 700ms cubic-bezier(.2,.9,.2,1), filter 600ms;
-      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.6));
-      background: radial-gradient(circle at center, rgba(255,255,255,0.02), transparent 40%);
-    }
-
-    /* Buttons */
-    .nav {
-      position:absolute; top:50%; transform:translateY(-50%); width:48px;height:48px;border-radius:10px;border:none;background:rgba(0,0,0,0.35);backdrop-filter: blur(4px); color:white; cursor:pointer;
-      display:flex;align-items:center;justify-content:center;font-size:20px;
-    }
-    .nav:active{transform:translateY(-50%) scale(.98)}
-    #prev{left:12px}
-    #next{right:12px}
-
-    /* Info / footer controls */
-    .controls {
-      margin-top:18px; display:flex; gap:12px; align-items:center; justify-content:center;
-    }
-    .btn{
-      padding:8px 14px;border-radius:10px;border:none;background:transparent;color:var(--muted);cursor:pointer;border:1px solid rgba(255,255,255,0.06)
-    }
-    .btn:active{transform:scale(.98)}
-
-    /* Video container (hidden until images finished) */
-    #video-wrap{
-      display:none; margin-top:18px; width: min(820px,92%); text-align:center;
-    }
-    video{
-      width:100%; max-height:60vh; border-radius:14px; background:black; outline:none; box-shadow:0 10px 30px rgba(0,0,0,0.5)
-    }
-
-    /* Message screen */
-    #message-screen{
-      display:none; position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(10,2,10,0.7)); z-index:1500;
-      display:flex;align-items:center;justify-content:center;padding:40px;
-    }
-    #message-card{
-      width:min(900px,95%); max-height:85vh; overflow:auto; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:28px; border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,0.6)
-    }
-    #message-text{
-      color:#fff; font-size:1.05rem; line-height:1.8rem; white-space:pre-wrap; font-family:Georgia, 'Times New Roman', serif;
-    }
-
-    /* small helpers */
-    .hidden{display:none !important}
-    /* responsive */
-    @media (max-width:720px){
-      .card{height:56vh}
-      #message{font-size:1.4rem; bottom:28%}
-      #pw-input{width:200px}
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Private Birthday — Thathsavi</title>
+<style>
+  :root{
+    --bg1:#0b0710; --accent:#ff4da6; --card:#0f0b12; --muted:rgba(255,255,255,0.8);
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;color:#fff;background:
+    linear-gradient(180deg,#120316 0,#2a0716 100%);-webkit-font-smoothing:antialiased;overflow:hidden}
+  /* Password screen */
+  #pw-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#ffb6d9 0,#ff6aa9 100%);z-index:3000;padding:28px}
+  #pw-screen h1{color:#111;margin:0 0 8px;font-size:1.5rem}
+  #pw-input{padding:12px 14px;border-radius:10px;border:none;width:260px;text-align:center;font-size:16px}
+  #pw-btn{margin-top:12px;padding:10px 16px;border-radius:10px;border:none;background:#111;color:var(--accent);cursor:pointer}
+  /* App container */
+  #app{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+  /* Card */
+  .card{width:min(820px,92%);height:min(520px,66vh);border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden}
+  .card-inner{width:calc(100% - 48px);height:calc(100% - 48px);display:flex;align-items:center;justify-content:center;border-radius:12px;position:relative;background:rgba(0,0,0,0.2)}
+  /* Image behaves like card, not stretched */
+  .card img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,0.6);
+    transition: transform .7s cubic-bezier(.2,.9,.2,1), filter .5s; pointer-events:none; user-select:none}
+  .card .fallback { color: var(--muted); font-size:1rem; text-align:center; padding:12px; }
+  /* transform effect variations */
+  .effect-0{transform:translateY(0) scale(1) rotate(0deg)}
+  .effect-1{transform:translateY(-8px) scale(1.03) rotate(-1deg)}
+  .effect-2{transform:translateX(8px) scale(1.04) rotate(1deg)}
+  .effect-3{transform:translateY(6px) scale(1.02) rotate(-0.6deg)}
+  .effect-4{transform:translateX(-6px) scale(1.05) rotate(0.8deg)}
+  .effect-5{transform:translateY(-10px) scale(1.06) rotate(-1.2deg)}
+  .effect-6{transform:translateX(10px) scale(1.04) rotate(1.4deg)}
+  .effect-7{transform:translateY(8px) scale(1.03) rotate(-0.8deg)}
+  /* nav buttons */
+  .nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:12px;border:none;background:rgba(0,0,0,0.36);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer}
+  .nav:active{transform:translateY(-50%) scale(.98)}
+  #prev{left:12px} #next{right:12px}
+  /* controls */
+  .controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px}
+  .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
+  .btn:active{transform:scale(.98)}
+  #page-info{min-width:140px;text-align:center;color:var(--muted)}
+  /* video */
+  #video-wrap{width:min(820px,92%);margin-top:12px;display:none}
+  #video-player{width:100%;height:auto;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);background:#000}
+  /* message screen */
+  #message-screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:28px;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(10,2,10,0.8));z-index:4000}
+  #message-card{width:min(900px,96%);max-height:86vh;overflow:auto;padding:26px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 30px 80px rgba(0,0,0,0.6)}
+  #message-text{color:#fff;font-size:1rem;line-height:1.7;white-space:pre-wrap;font-family:Georgia, 'Times New Roman', serif}
+  /* small screens */
+  @media (max-width:720px){
+    .card{height:58vh}
+    #pw-input{width:200px}
+    #page-info{min-width:110px;font-size:14px}
+  }
+</style>
 </head>
-<body translate="no" oncontextmenu="return false;">
-
-  <!-- PASSWORD -->
-  <div id="pw-screen" aria-hidden="false">
-    <h2>Enter Password to Open 💌</h2>
+<body translate="no">
+  <!-- Password -->
+  <div id="pw-screen" role="dialog" aria-modal="true">
+    <h1>Private — Enter Password</h1>
     <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
-    <div style="display:flex;gap:10px;align-items:center">
-      <button id="pw-btn">Enter</button>
-    </div>
-    <small style="color:#111; margin-top:12px; background:white;padding:6px 10px;border-radius:8px;">(private — do not share)</small>
+    <button id="pw-btn">Enter</button>
+    <div style="margin-top:10px; font-size:13px; color:#222; background:#fff;padding:6px 10px;border-radius:8px;">(Keep it private)</div>
   </div>
 
-  <!-- APP -->
+  <!-- Main app -->
   <div id="app" aria-hidden="true">
     <div class="card" role="region" aria-label="Image card">
-      <div class="card-inner" id="card-inner">
-        <!-- image will be injected here -->
+      <div class="card-inner">
         <img id="current-img" src="" alt="Photo" draggable="false" />
+        <div id="fallback" class="fallback hidden">Image not available</div>
       </div>
-
-      <button class="nav" id="prev" title="Previous (Left arrow)">&larr;</button>
-      <button class="nav" id="next" title="Next (Right arrow)">&rarr;</button>
+      <button class="nav" id="prev" title="Previous (Left)">&larr;</button>
+      <button class="nav" id="next" title="Next (Right)">&rarr;</button>
     </div>
 
-    <div class="controls" id="controls">
+    <div class="controls">
       <button class="btn" id="first-btn">First</button>
-      <div id="page-info" style="min-width:120px; text-align:center; color:var(--muted)"></div>
+      <div id="page-info">Photo 0 / 0</div>
       <button class="btn" id="last-btn">Last</button>
       <button class="btn" id="play-video-btn">Play video after images</button>
     </div>
 
-    <div id="video-wrap" aria-hidden="true">
-      <video id="video-player" controls controlsList="nodownload" playsinline webkit-playsinline poster="" crossorigin="anonymous"></video>
+    <div id="video-wrap">
+      <video id="video-player" controls controlsList="nodownload" playsinline webkit-playsinline crossorigin="anonymous"></video>
     </div>
   </div>
 
-  <!-- Message screen (separate) -->
-  <div id="message-screen" aria-hidden="true">
+  <!-- message screen -->
+  <div id="message-screen" role="dialog" aria-modal="true">
     <div id="message-card">
       <div id="message-text"></div>
     </div>
   </div>
 
-  <script>
-  /***** CONFIG — change these names if your files are different *****/
-  const images = [
-    'assets/photo1.jpg',
-    'assets/photo2.jpg',
-    'assets/photo3.jpg',
-    'assets/photo4.jpg',
-    'assets/photo5.jpg',
-    'assets/photo6.jpg',
-    'assets/photo7.jpg',
-    'assets/photo8.jpg'
-  ];
-  const videos = [
-    'assets/part1.mp4',
-    'assets/part2.mp4',
-    'assets/part3.mp4',
-    'assets/part4.mp4',
-    'assets/part5.mp4',
-    'assets/part6.mp4',
-    'assets/part7.mp4'
-  ];
-  const PASSWORD = "I AM IDIOT"; // exact password
-  const longMessage = `Happy birthday Thachuu — Rasi!
-Wishing you the happiest year ahead. May your days be filled with laughter, success, and the little moments that make life beautiful.
-Thank you for being you. Love, Abhi.`; // can be longer
+<script>
+/* ---------- CONFIG: filenames ---------- */
+/* Make sure these names exactly match files in assets/ */
+const images = [
+  'assets/photo1.jpg',
+  'assets/photo2.jpg',
+  'assets/photo3.jpg',
+  'assets/photo4.jpg',
+  'assets/photo5.jpg',
+  'assets/photo6.jpg',
+  'assets/photo7.jpg',
+  'assets/photo8.jpg'
+];
+const videos = [
+  'assets/part1.mp4',
+  'assets/part2.mp4',
+  'assets/part3.mp4',
+  'assets/part4.mp4',
+  'assets/part5.mp4',
+  'assets/part6.mp4',
+  'assets/part7.mp4'
+];
+const PASSWORD = "I AM IDIOT";
 
-  /***** UI elements *****/
-  const pwScreen = document.getElementById('pw-screen');
-  const pwInput = document.getElementById('pw-input');
-  const pwBtn = document.getElementById('pw-btn');
-  const app = document.getElementById('app');
-  const currentImg = document.getElementById('current-img');
-  const prevBtn = document.getElementById('prev');
-  const nextBtn = document.getElementById('next');
-  const firstBtn = document.getElementById('first-btn');
-  const lastBtn = document.getElementById('last-btn');
-  const pageInfo = document.getElementById('page-info');
-  const playVideoBtn = document.getElementById('play-video-btn');
-  const videoWrap = document.getElementById('video-wrap');
-  const videoPlayer = document.getElementById('video-player');
-  const messageScreen = document.getElementById('message-screen');
-  const messageText = document.getElementById('message-text');
+/* ---------- UI refs ---------- */
+const pwScreen = document.getElementById('pw-screen');
+const pwInput = document.getElementById('pw-input');
+const pwBtn = document.getElementById('pw-btn');
+const app = document.getElementById('app');
+const curImg = document.getElementById('current-img');
+const fallback = document.getElementById('fallback');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const firstBtn = document.getElementById('first-btn');
+const lastBtn = document.getElementById('last-btn');
+const pageInfo = document.getElementById('page-info');
+const playVideoBtn = document.getElementById('play-video-btn');
+const videoWrap = document.getElementById('video-wrap');
+const videoPlayer = document.getElementById('video-player');
+const messageScreen = document.getElementById('message-screen');
+const messageText = document.getElementById('message-text');
 
-  /* state */
-  let index = 0;
-  let slideAnimating = false;
-  let videoIndex = 0;
-  let autoplayVideoAfterImages = false;
+/* ---------- state ---------- */
+let idx = 0;
+let videoIdx = 0;
+let imagesCompleted = false;
 
-  /* initialize */
-  function updatePageInfo(){
-    pageInfo.textContent = `Photo ${index+1} / ${images.length}`;
-  }
+/* ---------- helpers ---------- */
+function updatePageInfo(){ pageInfo.textContent = `Photo ${idx+1} / ${images.length}`; }
+function showFallback(text){ fallback.textContent = text || 'Image not available'; fallback.classList.remove('hidden'); curImg.classList.add('hidden'); }
+function hideFallback(){ fallback.classList.add('hidden'); curImg.classList.remove('hidden'); }
 
-  function setImage(i, withTransform=true){
-    if(i < 0 || i >= images.length) return;
-    index = i;
-    updatePageInfo();
-    // set src
-    currentImg.style.opacity = 0;
-    // small delay to allow CSS transition
-    setTimeout(()=>{
-      currentImg.src = images[index];
-      currentImg.alt = `Photo ${index+1}`;
-      currentImg.onload = () => {
-        // apply transform animation for this image
-        if(withTransform) applyTransformToImage(currentImg, index);
-        currentImg.style.opacity = 1;
-      };
-      currentImg.onerror = () => {
-        // show a simple fallback visual if image fails
-        currentImg.style.opacity = 1;
-        currentImg.src = '';
-        currentImg.alt = `Unable to load photo ${index+1}`;
-        currentImg.style.filter = 'grayscale(80%)';
-      };
-    }, 130);
-  }
+/* apply transform class based on index */
+function applyEffect(el,i){
+  el.className = '';
+  // small reset
+  el.style.transition = 'transform .7s cubic-bezier(.2,.9,.2,1), filter .5s';
+  const c = 'effect-' + (i % 8);
+  el.classList.add(c);
+  // we still need inline transform for initial snap, set then remove quickly for smoothness
+  // handled by CSS classes above
+}
 
-  function applyTransformToImage(imgElement, idx){
-    // create a visually different transform per index: scale + rotate + translate subtle
-    const transforms = [
-      'translateY(0) scale(1) rotate(0deg)',
-      'translateY(-6px) scale(1.02) rotate(-1deg)',
-      'translateX(6px) scale(1.03) rotate(1deg)',
-      'translateY(6px) scale(1.02) rotate(-0.6deg)',
-      'translateX(-6px) scale(1.04) rotate(0.8deg)',
-      'translateY(-10px) scale(1.05) rotate(-1.2deg)',
-      'translateX(10px) scale(1.03) rotate(1.6deg)',
-      'translateY(8px) scale(1.02) rotate(-0.8deg)'
-    ];
-    const t = transforms[idx % transforms.length];
-    // briefly set stronger transform then settle for subtle parallax
-    imgElement.style.transform = 'scale(.96) rotate(0deg)';
-    setTimeout(()=> imgElement.style.transform = t, 40);
-  }
-
-  /* navigation */
-  prevBtn.addEventListener('click', ()=>{
-    if(index > 0) setImage(index - 1);
-  });
-  nextBtn.addEventListener('click', ()=>{
-    if(index < images.length - 1) {
-      setImage(index + 1);
+/* set image, robust loading and retry for photo1 issue */
+function setImage(i){
+  if(i<0) i=0;
+  if(i>=images.length) i = images.length-1;
+  idx = i;
+  updatePageInfo();
+  hideFallback();
+  curImg.style.opacity = '0';
+  // small cache-busting retry param to avoid stale/corrupt browser cache for first image
+  const url = images[idx] + (images[idx].includes('?') ? '&_v=1' : '?_v=1');
+  curImg.src = url;
+  curImg.alt = `Photo ${idx+1}`;
+  // onload handler
+  curImg.onload = () => {
+    curImg.style.filter = 'none';
+    curImg.style.opacity = '1';
+    curImg.className = ''; // remove any earlier effect classes
+    applyEffect(curImg, idx);
+  };
+  curImg.onerror = () => {
+    console.warn('image load failed:', images[idx]);
+    // try a simple retry without query string (some servers block query)
+    if(curImg.src.endsWith('?_v=1')) {
+      curImg.src = images[idx];
     } else {
-      // finished viewing images
-      onImagesCompleted();
+      showFallback(`Unable to load image ${idx+1}`);
     }
-  });
-  firstBtn.addEventListener('click', ()=> setImage(0));
-  lastBtn.addEventListener('click', ()=> setImage(images.length - 1));
-  // keyboard navigation
-  document.addEventListener('keydown', (e)=>{
-    if(app.style.display === 'none' || pwScreen.style.display !== 'none') return;
-    if(e.key === 'ArrowLeft') prevBtn.click();
-    if(e.key === 'ArrowRight') nextBtn.click();
-    if(e.key === 'Home') firstBtn.click();
-    if(e.key === 'End') lastBtn.click();
-  });
+  };
+}
 
-  // play video button
-  playVideoBtn.addEventListener('click', ()=> {
-    onImagesCompleted();
-  });
-
-  /* images finished -> show video area and auto-start video sequence */
-  function onImagesCompleted(){
-    // show video controls and start playing sequence
-    videoWrap.style.display = 'block';
-    autoplayVideoAfterImages = true;
-    startVideoSequence();
-    // scroll focus to video
-    videoPlayer.scrollIntoView({behavior:'smooth', block:'center'});
+/* navigation handlers */
+prevBtn.addEventListener('click', ()=> {
+  if(idx > 0) setImage(idx-1);
+});
+nextBtn.addEventListener('click', ()=> {
+  if(idx < images.length-1) {
+    setImage(idx+1);
+  } else {
+    // finished images
+    imagesCompleted = true;
+    onImagesComplete();
   }
+});
+firstBtn.addEventListener('click', ()=> setImage(0));
+lastBtn.addEventListener('click', ()=> setImage(images.length-1));
+playVideoBtn.addEventListener('click', ()=> onImagesComplete());
+// keyboard navigation
+document.addEventListener('keydown', (e)=>{
+  if(pwScreen.style.display !== 'none') return;
+  if(e.key === 'ArrowLeft') prevBtn.click();
+  if(e.key === 'ArrowRight') nextBtn.click();
+  if(e.key === 'Home') firstBtn.click();
+  if(e.key === 'End') lastBtn.click();
+});
 
-  /* video playback: play each part sequentially */
-  function startVideoSequence(){
-    videoPlayer.pause();
-    videoIndex = 0;
-    if(!videos || videos.length === 0) {
-      // go directly to message screen
-      goToMessageScreen();
-      return;
-    }
-    videoPlayer.src = videos[videoIndex];
-    try { videoPlayer.load(); } catch(e){}
-    videoPlayer.play().catch(err=>{
-      // autoplay often blocked; show play hint
-      console.log('Autoplay blocked - user must press play', err);
-      // show subtle overlay or keep controls visible and instruct user to press play
-    });
+/* mobile swipe support */
+let touchStartX = 0;
+document.querySelector('.card-inner').addEventListener('touchstart', (e)=>{
+  touchStartX = e.touches[0].clientX;
+}, {passive:true});
+document.querySelector('.card-inner').addEventListener('touchend', (e)=>{
+  const x = e.changedTouches[0].clientX;
+  const diff = x - touchStartX;
+  if(Math.abs(diff) > 40){
+    if(diff > 0) prevBtn.click(); else nextBtn.click();
   }
+});
 
-  // advance to next video part when one ends
-  videoPlayer.addEventListener('ended', ()=>{
-    videoIndex++;
-    if(videoIndex < videos.length){
-      videoPlayer.src = videos[videoIndex];
-      videoPlayer.load();
-      videoPlayer.play().catch(()=>{/* user must click if autoplay blocked */});
-    } else {
-      // video sequence finished -> move to message screen
-      goToMessageScreen();
-    }
+/* ---------- images preload (light) ---------- */
+function preloadImages(){
+  images.forEach(src => {
+    const im = new Image();
+    im.src = src;
   });
+}
+preloadImages();
 
-  /***** PASSWORD logic *****/
-  pwBtn.addEventListener('click', enterPassword);
-  pwInput.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter') enterPassword();
-  });
+/* ---------- images complete -> video ---------- */
+function onImagesComplete(){
+  // show video controls
+  videoWrap.style.display = 'block';
+  // focus the video player
+  videoPlayer.focus();
+  // start video sequence
+  videoIdx = 0;
+  playVideoPart(videoIdx);
+}
 
-  function enterPassword(){
-    const val = pwInput.value.trim();
-    if(val === PASSWORD){
-      // unlock
-      pwScreen.style.display = 'none';
-      app.style.display = 'flex';
-      app.setAttribute('aria-hidden','false');
-      // show first image
-      setImage(0);
-      // focus for keyboard nav
-      nextBtn.focus();
-    } else {
-      alert('Wrong password. Try again.');
-      pwInput.value = '';
-      pwInput.focus();
-    }
+/* play one part by setting src and playing; when ended move to next */
+function playVideoPart(i){
+  if(!videos || videos.length === 0){
+    goToMessageScreen();
+    return;
   }
-
-  /* Message screen: typing effect */
-  function goToMessageScreen(){
-    // hide main UI, show message screen overlay
-    messageScreen.style.display = 'flex';
-    messageScreen.setAttribute('aria-hidden','false');
-    // type the message realistically
-    typeText(longMessage, messageText, 20, 90);
+  if(i < 0 || i >= videos.length) {
+    goToMessageScreen();
+    return;
   }
+  // set src and play
+  videoPlayer.src = videos[i];
+  videoPlayer.load();
+  videoPlayer.play().catch(err=>{
+    // autoplay may be blocked: leave controls visible for user to tap play
+    console.log('Autoplay blocked:', err);
+  });
+}
 
-  function typeText(textElOrString, container, minDelay=20, maxDelay=90){
-    const text = (typeof textElOrString === 'string') ? textElOrString : textElOrString.textContent || '';
-    container.textContent = '';
-    let i = 0;
-    function step(){
-      if(i >= text.length) {
-        // finish typing
-        container.style.borderRight = 'none';
-        return;
-      }
-      const ch = text[i++];
-      container.textContent += ch;
-      // create natural pauses for punctuation
-      let delay = Math.random()*(maxDelay-minDelay)+minDelay;
-      if(ch === ',' ) delay += 120;
-      if(ch === '.' || ch === '!' || ch === '?') delay += 300;
-      setTimeout(step, delay);
-    }
-    step();
+/* advance after each ended */
+videoPlayer.addEventListener('ended', ()=>{
+  videoIdx++;
+  if(videoIdx < videos.length){
+    playVideoPart(videoIdx);
+  } else {
+    // all parts finished -> show message screen
+    goToMessageScreen();
   }
+});
 
-  /***** Prevent easy downloads & basic anti-capture measures *****/
-  // disable right click
-  document.addEventListener('contextmenu', (e)=> e.preventDefault());
-  // disable drag of images
-  document.addEventListener('dragstart', (e)=> {
-    if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
-  }, false);
+/* ---------- message typing ---------- */
+const finalMessage = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi. 
+Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
+22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
+Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺️😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺️ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤️ have a wonderful 😊 Time and Smile In Your Face 
+Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025`;
 
-  // set video attribute to suggest no download (not foolproof)
-  videoPlayer.setAttribute('controlsList','nodownload');
+/* realistic typing with punctuation delays */
+function typeMessage(text, container, min=18, max=80){
+  container.textContent = '';
+  let i=0;
+  function step(){
+    if(i >= text.length) { return; }
+    const ch = text[i++];
+    container.textContent += ch;
+    let delay = Math.random()*(max-min) + min;
+    if(ch === ',' ) delay += 120;
+    if(ch === '.' || ch === '!' || ch === '?') delay += 300;
+    setTimeout(step, delay);
+  }
+  step();
+}
 
-  // attempt to detect PrintScreen; cannot truly block OS-level screen capture
-  // but we try to obfuscate quickly and show a warning (temporary blur)
-  document.addEventListener('keyup', (e)=>{
-    // keyCode 44 is PrintScreen on some systems
-    if(e.key === 'PrintScreen' || e.keyCode === 44){
-      // briefly blur main content and show overlay text
-      const overlay = document.createElement('div');
-      overlay.style.position = 'fixed';
-      overlay.style.inset = '0';
-      overlay.style.backdropFilter = 'blur(6px)';
-      overlay.style.background = 'rgba(0,0,0,0.35)';
-      overlay.style.zIndex = 9999;
-      overlay.style.display = 'flex';
-      overlay.style.alignItems = 'center';
-      overlay.style.justifyContent = 'center';
-      overlay.style.color = '#fff';
-      overlay.style.fontSize = 'clamp(16px,2vw,22px)';
-      overlay.textContent = 'Screen capture detected — this content is private.';
-      document.body.appendChild(overlay);
-      setTimeout(()=> overlay.remove(), 1200);
-      // also try to clear clipboard (best-effort)
-      try{ navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
-    }
-  });
-
-  // detect common fullscreen/capture shortcuts (not exhaustive)
-  document.addEventListener('keydown', (e)=>{
-    // block Ctrl+S, Ctrl+U, Ctrl+Shift+I, Ctrl+P
-    if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 's' || e.key.toLowerCase() === 'u' || e.key.toLowerCase() === 'p')) {
-      e.preventDefault(); alert('Saving/printing disabled for privacy.');
-    }
-    if(e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j')) {
-      e.preventDefault();
-    }
-  });
-
-  /* Prevent image context menu / save on long touch mobile */
-  currentImg.addEventListener('touchstart', (e)=> e.preventDefault(), {passive:false});
-
-  /* Accessibility: hide heavy elements until password */
+function goToMessageScreen(){
+  // hide app elements
   app.style.display = 'none';
+  // show message overlay
+  messageScreen.style.display = 'flex';
+  typeMessage(finalMessage, messageText);
+}
 
-  // final safety: if images exist but not loaded yet, preload quietly to avoid flicker
-  function preloadAll(){
-    images.forEach(src => {
-      const im = new Image();
-      im.src = src;
-    });
-    videos.forEach(src => {
-      // do not preload large video parts automatically (avoid bandwidth); only light probe
-      // create but don't download fully; browser will handle on demand
-    });
+/* ---------- password handling ---------- */
+pwBtn.addEventListener('click', tryPassword);
+pwInput.addEventListener('keydown', e=> { if(e.key === 'Enter') tryPassword(); });
+
+function tryPassword(){
+  const val = pwInput.value.trim();
+  if(val === PASSWORD){
+    // unlock
+    pwScreen.style.display = 'none';
+    app.style.display = 'flex';
+    // ensure focus and initial image
+    setImage(0);
+    updatePageInfo();
+    // accessibility focus
+    nextBtn.focus();
+  } else {
+    alert('Wrong password — try again.');
+    pwInput.value = '';
+    pwInput.focus();
   }
-  // preload image thumbnails (light)
-  preloadAll();
+}
 
-  // End of script
-  </script>
+/* ---------- basic download / capture protections ---------- */
+/* disable right click and copying */
+document.addEventListener('contextmenu', e=> e.preventDefault());
+document.addEventListener('dragstart', e=>{
+  if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
+}, false);
+/* block common save/inspect shortcuts (best-effort) */
+document.addEventListener('keydown', (e)=>{
+  if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 's' || e.key.toLowerCase() === 'u' || e.key === 'F12')){ e.preventDefault(); alert('This content is private.'); }
+  if(e.ctrlKey && e.key === 'p'){ e.preventDefault(); alert('Printing disabled.'); }
+});
+/* PrintScreen deterrent */
+document.addEventListener('keyup', (e)=>{
+  if(e.key === 'PrintScreen' || e.keyCode === 44){
+    const overlay = document.createElement('div');
+    overlay.style.position='fixed'; overlay.style.inset='0'; overlay.style.zIndex='9999';
+    overlay.style.backdropFilter='blur(6px)'; overlay.style.background='rgba(0,0,0,0.35)';
+    overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center';
+    overlay.style.color='white'; overlay.style.fontSize='20px'; overlay.textContent='Screen capture detected — private content.';
+    document.body.appendChild(overlay); setTimeout(()=>overlay.remove(),1200);
+    try{ navigator.clipboard && navigator.clipboard.writeText(''); }catch(err){}
+  }
+});
+
+/* ---------- accessibility / preflight ---------- */
+updatePageInfo();
+/* If user wants, tweak animations below (duration, transforms) */
+</script>
 </body>
 </html>
