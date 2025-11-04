@@ -1,370 +1,191 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Private Birthday — Thathsavi</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Rasi 💖</title>
 <style>
-  :root{
-    --bg:#0b0710; --accent:#ff4da6; --card-bg:rgba(255,255,255,0.03); --muted:rgba(255,255,255,0.85);
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffd6e8, #fff0f5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
   }
-  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;color:#fff;background:
-    linear-gradient(180deg,#120316 0,#2a0716 100%);-webkit-font-smoothing:antialiased;overflow:hidden}
-
-  /* Password screen */
-  #pw-screen{
-    position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-    background:linear-gradient(135deg,#ffd3e6 0,#ff6aa9 100%);z-index:9999;padding:28px;
+  .hidden { display: none; }
+  .fade { animation: fade 1s ease forwards; }
+  @keyframes fade { to { opacity: 0; visibility: hidden; } }
+  
+  /* Password Screen */
+  #passwordScreen {
+    text-align: center;
   }
-  #pw-screen h1{color:#111;margin:0;font-size:1.6rem}
-  #pw-input{padding:12px 14px;border-radius:10px;border:none;width:300px;text-align:center;font-size:16px}
-  #pw-btn{padding:10px 16px;border-radius:10px;border:none;background:#111;color:var(--accent);cursor:pointer;font-weight:600}
-
-  /* App container */
-  #app{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-
-  /* Card */
-  .card{
-    width:min(860px,92%);height:min(540px,66vh);border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden;
+  #passwordInput {
+    padding: 10px; border-radius: 5px; border: 1px solid #ccc;
   }
-  .card-inner{width:calc(100% - 48px);height:calc(100% - 48px);display:flex;align-items:center;justify-content:center;border-radius:14px;position:relative;background:rgba(0,0,0,0.22)}
-  .card img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);transition: transform .7s cubic-bezier(.2,.9,.2,1), filter .5s;pointer-events:none;user-select:none}
-  .fallback{color:var(--muted);font-size:1rem;text-align:center;padding:12px;display:none}
-
-  /* transform classes */
-  .effect-0{transform:translateY(0) scale(1) rotate(0deg)}
-  .effect-1{transform:translateY(-8px) scale(1.03) rotate(-1deg)}
-  .effect-2{transform:translateX(8px) scale(1.04) rotate(1deg)}
-  .effect-3{transform:translateY(6px) scale(1.02) rotate(-0.6deg)}
-  .effect-4{transform:translateX(-6px) scale(1.05) rotate(0.8deg)}
-  .effect-5{transform:translateY(-10px) scale(1.06) rotate(-1.2deg)}
-  .effect-6{transform:translateX(10px) scale(1.04) rotate(1.4deg)}
-  .effect-7{transform:translateY(8px) scale(1.03) rotate(-0.8deg)}
-
-  /* nav buttons */
-  .nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:12px;border:none;background:rgba(0,0,0,0.36);backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;z-index:10}
-  .nav:active{transform:translateY(-50%) scale(.98)}
-  #prev{left:14px} #next{right:14px}
-
-  /* controls row */
-  .controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px}
-  .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
-  #page-info{min-width:140px;text-align:center;color:var(--muted)}
-
-  /* video area (hidden until images finished) */
-  #video-wrap{display:none;width:min(920px,92%);margin-top:14px}
-  #video-player{width:100%;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);background:#000}
-
-  /* message screen */
-  #message-screen{display:none;position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.7), rgba(10,2,10,0.85));z-index:9998;display:flex;align-items:center;justify-content:center;padding:34px}
-  #message-card{width:min(980px,96%);max-height:86vh;overflow:auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:26px;border-radius:12px;box-shadow:0 30px 70px rgba(0,0,0,0.6)}
-  #message-text{color:#fff;font-size:1rem;line-height:1.8;white-space:pre-wrap;font-family:Georgia, 'Times New Roman', serif}
-
-  @media (max-width:720px){
-    .card{height:58vh}
-    #pw-input{width:200px}
-    #page-info{min-width:110px;font-size:14px}
+  button {
+    background: #ff80aa; color: white; border: none;
+    border-radius: 10px; padding: 10px 20px; cursor: pointer;
+  }
+  button:hover { background: #ff6699; }
+  
+  /* Message Screen */
+  #introMessage {
+    font-size: 2rem; color: #ff4d88; text-align: center;
+    animation: fadeIn 2s ease;
+  }
+  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+  
+  /* Image Slideshow */
+  #slideshow {
+    text-align: center;
+  }
+  #slideshow img {
+    width: auto;
+    height: 60vh;
+    max-width: 90%;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: transform 0.5s ease;
+  }
+  .nav-btns {
+    margin-top: 15px;
+  }
+  
+  /* Long Message Card */
+  #messageCard {
+    background: #ffe6eb;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 20px;
+    max-width: 90%;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+  }
+  #typedText {
+    text-align: left;
+    white-space: pre-wrap;
   }
 </style>
 </head>
-<body translate="no">
+<body>
 
-  <!-- PASSWORD SCREEN -->
-  <div id="pw-screen" role="dialog" aria-modal="true">
-    <h1>Private — Enter Password</h1>
-    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
-    <div style="display:flex;gap:10px;align-items:center">
-      <button id="pw-btn">Enter</button>
-    </div>
-    <div style="margin-top:10px;font-size:13px;color:#222;background:#fff;padding:6px 10px;border-radius:8px;">(Keep it private)</div>
+<!-- Password Screen -->
+<div id="passwordScreen">
+  <h2>Enter Password 💖</h2>
+  <input type="password" id="passwordInput" placeholder="Enter Password">
+  <button onclick="checkPassword()">Enter</button>
+</div>
+
+<!-- Intro Message -->
+<div id="introMessage" class="hidden">💖 Happy Birthday Rah Thathsavi 💖</div>
+
+<!-- Slideshow -->
+<div id="slideshow" class="hidden">
+  <img id="slideImage" src="assets/photo1.jpg" alt="Image">
+  <div class="nav-btns">
+    <button onclick="prevImage()">Previous</button>
+    <button onclick="nextImage()">Next</button>
   </div>
+</div>
 
-  <!-- APP -->
-  <div id="app" aria-hidden="true">
-    <div class="card" role="region" aria-label="Image card">
-      <div class="card-inner">
-        <img id="current-img" src="" alt="Photo" draggable="false" />
-        <div id="fallback" class="fallback">Image not available</div>
-      </div>
-      <button class="nav" id="prev" title="Previous (Left arrow)">&larr;</button>
-      <button class="nav" id="next" title="Next (Right arrow)">&rarr;</button>
-    </div>
+<!-- Next to Message -->
+<div id="nextToMessage" class="hidden">
+  <button onclick="showMessage()">Next</button>
+</div>
 
-    <div class="controls">
-      <button class="btn" id="first-btn">First</button>
-      <div id="page-info">Photo 0 / 0</div>
-      <button class="btn" id="last-btn">Last</button>
-      <button class="btn" id="play-video-btn">Play videos</button>
-    </div>
-
-    <div id="video-wrap">
-      <video id="video-player" controls controlsList="nodownload" playsinline webkit-playsinline crossorigin="anonymous"></video>
-    </div>
-  </div>
-
-  <!-- MESSAGE SCREEN -->
-  <div id="message-screen" role="dialog" aria-modal="true">
-    <div id="message-card">
-      <div id="message-text"></div>
-    </div>
-  </div>
+<!-- Long Message Card -->
+<div id="messageCard" class="hidden">
+  <div id="typedText"></div>
+</div>
 
 <script>
-/* ========= CONFIG ========= */
-const images = [
-  'assets/photo1.jpg',
-  'assets/photo2.jpg',
-  'assets/photo3.jpg',
-  'assets/photo4.jpg',
-  'assets/photo5.jpg',
-  'assets/photo6.jpg',
-  'assets/photo7.jpg',
-  'assets/photo8.jpg'
-];
-const videos = [
-  'assets/part1.mp4',
-  'assets/part2.mp4',
-  'assets/part3.mp4',
-  'assets/part4.mp4',
-  'assets/part5.mp4',
-  'assets/part6.mp4',
-  'assets/part7.mp4'
-];
-const PASSWORD = "I AM IDIOT";
+  const password = "I AM IDIOT";
+  const passwordScreen = document.getElementById("passwordScreen");
+  const introMessage = document.getElementById("introMessage");
+  const slideshow = document.getElementById("slideshow");
+  const nextToMessage = document.getElementById("nextToMessage");
+  const messageCard = document.getElementById("messageCard");
+  const images = [
+    "assets/photo1.jpg", "assets/photo2.jpg", "assets/photo3.jpg",
+    "assets/photo4.jpg", "assets/photo5.jpg", "assets/photo6.jpg",
+    "assets/photo7.jpg", "assets/photo8.jpg"
+  ];
+  let index = 0;
+  const slideImage = document.getElementById("slideImage");
 
-/* Full long message (exact text you provided) */
-const finalMessage = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi. 
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value;
+    if (input === password) {
+      passwordScreen.classList.add("fade");
+      setTimeout(() => {
+        passwordScreen.classList.add("hidden");
+        introMessage.classList.remove("hidden");
+        setTimeout(() => {
+          introMessage.classList.add("fade");
+          setTimeout(() => {
+            introMessage.classList.add("hidden");
+            slideshow.classList.remove("hidden");
+          }, 1500);
+        }, 3000);
+      }, 1000);
+    } else {
+      alert("Wrong password! Try again 💔");
+    }
+  }
+
+  function nextImage() {
+    index = (index + 1) % images.length;
+    slideImage.src = images[index];
+    if (index === images.length - 1) {
+      nextToMessage.classList.remove("hidden");
+    }
+  }
+
+  function prevImage() {
+    index = (index - 1 + images.length) % images.length;
+    slideImage.src = images[index];
+  }
+
+  function showMessage() {
+    slideshow.classList.add("fade");
+    nextToMessage.classList.add("fade");
+    setTimeout(() => {
+      slideshow.classList.add("hidden");
+      nextToMessage.classList.add("hidden");
+      messageCard.classList.remove("hidden");
+      typeMessage();
+    }, 1000);
+  }
+
+  const fullMessage = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.
 Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
 22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
 Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺️😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺️ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤️ have a wonderful 😊 Time and Smile In Your Face 
-Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025`;
+Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 Hope you Loved This link keep the link private ❤️`;
 
-/* ======= UI refs ======= */
-const pwScreen = document.getElementById('pw-screen');
-const pwInput = document.getElementById('pw-input');
-const pwBtn = document.getElementById('pw-btn');
-const app = document.getElementById('app');
-const curImg = document.getElementById('current-img');
-const fallback = document.getElementById('fallback');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-const firstBtn = document.getElementById('first-btn');
-const lastBtn = document.getElementById('last-btn');
-const pageInfo = document.getElementById('page-info');
-const playVideoBtn = document.getElementById('play-video-btn');
-const videoWrap = document.getElementById('video-wrap');
-const videoPlayer = document.getElementById('video-player');
-const messageScreen = document.getElementById('message-screen');
-const messageText = document.getElementById('message-text');
-
-/* ======= State ======= */
-let index = 0;
-let videoIndex = 0;
-
-/* ======= Helpers ======= */
-function updatePageInfo(){ pageInfo.textContent = `Photo ${index+1} / ${images.length}`; }
-function showFallback(msg){ fallback.textContent = msg||'Image not available'; fallback.style.display='block'; curImg.style.display='none'; }
-function hideFallback(){ fallback.style.display='none'; curImg.style.display='block'; }
-
-/* apply transform class */
-function applyTransform(el,i){
-  // remove existing effect classes
-  for(let n=0;n<8;n++) el.classList.remove('effect-'+n);
-  el.classList.add('effect-'+(i % 8));
-}
-
-/* set image with cache-bust to avoid stale first-upload issue */
-function setImage(i){
-  if(i<0) i=0; if(i>=images.length) i=images.length-1;
-  index = i;
-  updatePageInfo();
-  hideFallback();
-  curImg.style.opacity = '0';
-  const base = images[index];
-  // try with cache-bust first (helps if earlier upload failed)
-  const url = base + (base.includes('?') ? '&_cb=' + Date.now() : '?_cb=' + Date.now());
-  curImg.src = url;
-  curImg.alt = `Photo ${index+1}`;
-  curImg.onload = () => {
-    curImg.style.opacity = '1';
-    curImg.style.filter = 'none';
-    applyTransform(curImg, index);
-  };
-  curImg.onerror = () => {
-    // retry without query
-    if(curImg.src.indexOf('?_cb=') !== -1) {
-      curImg.src = base;
-    } else {
-      console.warn('Failed to load', images[index]);
-      showFallback(`Unable to load image ${index+1}`);
-    }
-  };
-}
-
-/* ======= Navigation ======= */
-prevBtn.addEventListener('click', ()=> { if(index>0) setImage(index-1); });
-nextBtn.addEventListener('click', ()=> {
-  if(index < images.length - 1) {
-    setImage(index+1);
-  } else {
-    // finished images -> start videos
-    startVideoSequence();
-  }
-});
-firstBtn.addEventListener('click', ()=> setImage(0));
-lastBtn.addEventListener('click', ()=> setImage(images.length - 1));
-playVideoBtn.addEventListener('click', startVideoSequence);
-
-/* keyboard nav */
-document.addEventListener('keydown', (e)=>{
-  if(pwScreen.style.display !== 'none') return;
-  if(e.key === 'ArrowLeft') prevBtn.click();
-  if(e.key === 'ArrowRight') nextBtn.click();
-});
-
-/* mobile swipe */
-let touchStartX = 0;
-document.querySelector('.card-inner').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
-document.querySelector('.card-inner').addEventListener('touchend', e => {
-  const x = e.changedTouches[0].clientX; const diff = x - touchStartX;
-  if(Math.abs(diff) > 40){ if(diff > 0) prevBtn.click(); else nextBtn.click(); }
-}, {passive:true});
-
-/* preload images lightly */
-function preload(){
-  images.forEach(s => { const im = new Image(); im.src = s; });
-}
-preload();
-
-/* ======= Video sequence ======= */
-function startVideoSequence(){
-  // hide slideshow controls, show video area
-  document.querySelector('.controls').style.display = 'none';
-  videoWrap.style.display = 'block';
-  videoIndex = 0;
-  playVideoPart(videoIndex);
-}
-
-function playVideoPart(i){
-  if(i < 0 || i >= videos.length) {
-    onAllVideosFinished();
-    return;
-  }
-  videoPlayer.src = videos[i];
-  videoPlayer.load();
-  videoPlayer.play().catch(err => {
-    // autoplay may be blocked by browser; show a small overlay message
-    console.log('Autoplay blocked. User must tap play.', err);
-    showPlayHint();
-  });
-}
-
-/* when a part ends -> move next */
-videoPlayer.addEventListener('ended', () => {
-  videoIndex++;
-  if(videoIndex < videos.length) {
-    playVideoPart(videoIndex);
-  } else {
-    onAllVideosFinished();
-  }
-});
-
-/* show hint to user to press play if autoplay blocked */
-let playHint = null;
-function showPlayHint(){
-  if(playHint) return;
-  playHint = document.createElement('div');
-  playHint.textContent = 'Tap the ▶︎ play button on the video to continue';
-  playHint.style.position = 'absolute';
-  playHint.style.top = '8px';
-  playHint.style.left = '50%';
-  playHint.style.transform = 'translateX(-50%)';
-  playHint.style.background = 'rgba(0,0,0,0.6)';
-  playHint.style.padding = '8px 12px';
-  playHint.style.borderRadius = '8px';
-  playHint.style.zIndex = '50';
-  document.body.appendChild(playHint);
-  setTimeout(()=>{ if(playHint){ playHint.remove(); playHint = null; } }, 6000);
-}
-
-/* ======= After videos finished ======= */
-function onAllVideosFinished(){
-  // hide everything and show message screen
-  document.getElementById('app').style.display = 'none';
-  messageScreen.style.display = 'flex';
-  typeFinalMessage(finalMessage, document.getElementById('message-text'));
-}
-
-/* realistic typing function */
-function typeFinalMessage(text, container, minDelay=18, maxDelay=80){
-  container.textContent = '';
   let i = 0;
-  function step(){
-    if(i >= text.length) return;
-    const ch = text[i++];
-    container.textContent += ch;
-    let delay = Math.random() * (maxDelay - minDelay) + minDelay;
-    if(ch === ',') delay += 120;
-    if(ch === '.' || ch === '!' || ch === '?') delay += 300;
-    if(ch === '\n') delay += 40;
-    setTimeout(step, delay);
+  function typeMessage() {
+    if (i < fullMessage.length) {
+      document.getElementById("typedText").innerHTML += fullMessage.charAt(i);
+      i++;
+      setTimeout(typeMessage, 40);
+    } else {
+      document.getElementById("typedText").innerHTML += "\n\n💖 Love you Rasi 💖";
+    }
   }
-  step();
-}
 
-/* ======= Password handling ======= */
-document.getElementById('pw-btn').addEventListener('click', tryPassword);
-pwInput.addEventListener('keydown', e => { if(e.key === 'Enter') tryPassword(); });
-
-function tryPassword(){
-  const v = pwInput.value.trim();
-  if(v === PASSWORD){
-    pwScreen.style.display = 'none';
-    app.style.display = 'flex';
-    setImage(0);
-    updatePageInfo();
-    nextBtn.focus();
-  } else {
-    alert('Wrong password — try again.');
-    pwInput.value = '';
-    pwInput.focus();
-  }
-}
-
-/* ======= Basic protections (best-effort) ======= */
-/* disable right click */
-document.addEventListener('contextmenu', e => e.preventDefault());
-/* prevent drag of images/video */
-document.addEventListener('dragstart', e => { if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault(); }, false);
-/* block some common shortcuts */
-document.addEventListener('keydown', e => {
-  if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase()==='s' || e.key.toLowerCase()==='u' || e.key === 'F12')){ e.preventDefault(); alert('This content is private.'); }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p'){ e.preventDefault(); alert('Printing disabled.'); }
-});
-/* attempt PrintScreen deterrent */
-document.addEventListener('keyup', e => {
-  if(e.key === 'PrintScreen' || e.keyCode === 44){
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed'; overlay.style.inset = '0'; overlay.style.zIndex = '99999';
-    overlay.style.backdropFilter = 'blur(6px)'; overlay.style.background = 'rgba(0,0,0,0.4)';
-    overlay.style.display = 'flex'; overlay.style.alignItems = 'center'; overlay.style.justifyContent = 'center';
-    overlay.style.color = 'white'; overlay.style.fontSize = '18px';
-    overlay.textContent = 'Screen capture detected — this content is private.';
-    document.body.appendChild(overlay);
-    setTimeout(()=> overlay.remove(), 1200);
-    try{ navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
-  }
-});
-
-/* disable long-touch menu on mobile for images */
-curImg.addEventListener('touchstart', e=> e.preventDefault(), {passive:false});
-
-/* accessibility + initial state */
-app.style.display = 'none';
-updatePageInfo();
-
+  // Protection
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'PrintScreen') e.preventDefault();
+  });
 </script>
 </body>
 </html>
