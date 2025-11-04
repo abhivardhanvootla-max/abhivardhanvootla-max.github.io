@@ -19,11 +19,9 @@
   .hidden { display: none; }
   .fade { animation: fade 1s ease forwards; }
   @keyframes fade { to { opacity: 0; visibility: hidden; } }
-  
+
   /* Password Screen */
-  #passwordScreen {
-    text-align: center;
-  }
+  #passwordScreen { text-align: center; }
   #passwordInput {
     padding: 10px; border-radius: 5px; border: 1px solid #ccc;
   }
@@ -32,46 +30,51 @@
     border-radius: 10px; padding: 10px 20px; cursor: pointer;
   }
   button:hover { background: #ff6699; }
-  
-  /* Message Screen */
+
+  /* Intro Message */
   #introMessage {
     font-size: 2rem; color: #ff4d88; text-align: center;
     animation: fadeIn 2s ease;
   }
   @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-  
-  /* Image Slideshow */
-  #slideshow {
-    text-align: center;
-  }
+
+  /* Slideshow */
+  #slideshow { text-align: center; }
   #slideshow img {
-    width: auto;
-    height: 60vh;
     max-width: 90%;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    object-fit: contain;
     transition: transform 0.5s ease;
   }
-  .nav-btns {
-    margin-top: 15px;
+  .nav-btns { margin-top: 15px; }
+
+  /* Message Cards */
+  #messageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 90%;
   }
-  
-  /* Long Message Card */
-  #messageCard {
+  .messageCard {
     background: #ffe6eb;
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     padding: 20px;
-    max-width: 90%;
+    width: 100%;
+    max-width: 600px;
     text-align: center;
     font-size: 1rem;
     line-height: 1.6;
     color: #333;
+    overflow-y: auto;
+    max-height: 70vh;
   }
-  #typedText {
-    text-align: left;
-    white-space: pre-wrap;
-  }
+  #typedText1, #typedText2 { text-align: left; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -100,9 +103,10 @@
   <button onclick="showMessage()">Next</button>
 </div>
 
-<!-- Long Message Card -->
-<div id="messageCard" class="hidden">
-  <div id="typedText"></div>
+<!-- Long Message (Two Cards) -->
+<div id="messageContainer" class="hidden">
+  <div id="messageCard1" class="messageCard"><div id="typedText1"></div></div>
+  <div id="messageCard2" class="messageCard hidden"><div id="typedText2"></div></div>
 </div>
 
 <script>
@@ -111,7 +115,10 @@
   const introMessage = document.getElementById("introMessage");
   const slideshow = document.getElementById("slideshow");
   const nextToMessage = document.getElementById("nextToMessage");
-  const messageCard = document.getElementById("messageCard");
+  const messageContainer = document.getElementById("messageContainer");
+  const msg1 = document.getElementById("typedText1");
+  const msg2 = document.getElementById("typedText2");
+
   const images = [
     "assets/photo1.jpg", "assets/photo2.jpg", "assets/photo3.jpg",
     "assets/photo4.jpg", "assets/photo5.jpg", "assets/photo6.jpg",
@@ -159,25 +166,39 @@
     setTimeout(() => {
       slideshow.classList.add("hidden");
       nextToMessage.classList.add("hidden");
-      messageCard.classList.remove("hidden");
-      typeMessage();
+      messageContainer.classList.remove("hidden");
+      typeMessage1();
     }, 1000);
   }
 
-  const fullMessage = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.
+  const messagePart1 = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko.`;
+
+  const messagePart2 = `And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.
 Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
 22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
 Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺️😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺️ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤️ have a wonderful 😊 Time and Smile In Your Face 
-Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 Hope you Loved This link keep the link private ❤️`;
+Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 Hope you Loved This link keep the link private ❤️
+💖 Love you Rasi 💖`;
 
-  let i = 0;
-  function typeMessage() {
-    if (i < fullMessage.length) {
-      document.getElementById("typedText").innerHTML += fullMessage.charAt(i);
-      i++;
-      setTimeout(typeMessage, 40);
+  let i1 = 0, i2 = 0;
+  function typeMessage1() {
+    if (i1 < messagePart1.length) {
+      msg1.innerHTML += messagePart1.charAt(i1);
+      i1++;
+      setTimeout(typeMessage1, 40);
     } else {
-      document.getElementById("typedText").innerHTML += "\n\n💖 Love you Rasi 💖";
+      setTimeout(() => {
+        document.getElementById("messageCard2").classList.remove("hidden");
+        typeMessage2();
+      }, 1000);
+    }
+  }
+
+  function typeMessage2() {
+    if (i2 < messagePart2.length) {
+      msg2.innerHTML += messagePart2.charAt(i2);
+      i2++;
+      setTimeout(typeMessage2, 40);
     }
   }
 
