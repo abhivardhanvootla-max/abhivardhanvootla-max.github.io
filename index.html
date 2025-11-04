@@ -3,210 +3,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Rasi 💖</title>
+<title>For Rasi 💖</title>
 <style>
   body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ffd6e8, #fff0f5);
+    background: linear-gradient(135deg, #ffb6c1, #ffd6e7);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     overflow: hidden;
+    font-family: 'Poppins', sans-serif;
     user-select: none;
   }
-  .hidden { display: none; }
-  .fade { animation: fade 1s ease forwards; }
-  @keyframes fade { to { opacity: 0; visibility: hidden; } }
-
-  /* Password Screen */
-  #passwordScreen { text-align: center; }
-  #passwordInput {
-    padding: 10px; border-radius: 5px; border: 1px solid #ccc;
+  #passwordScreen, #gallery, #videoPlayer, #messageScreen1, #messageScreen2 {
+    display: none;
+    text-align: center;
+    width: 100%;
+    height: 100%;
   }
-  button {
-    background: #ff80aa; color: white; border: none;
-    border-radius: 10px; padding: 10px 20px; cursor: pointer;
+  .card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
   }
-  button:hover { background: #ff6699; }
-
-  /* Intro Message */
-  #introMessage {
-    font-size: 2rem; color: #ff4d88; text-align: center;
-    animation: fadeIn 2s ease;
-  }
-  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-
-  /* Slideshow */
-  #slideshow { text-align: center; }
-  #slideshow img {
+  .card img {
     max-width: 90%;
-    max-height: 70vh;
-    width: auto;
-    height: auto;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    object-fit: contain;
+    max-height: 80vh;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
     transition: transform 0.5s ease;
   }
-  .nav-btns { margin-top: 15px; }
-
-  /* Message Cards */
-  #messageContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    max-width: 90%;
+  .buttons {
+    margin-top: 10px;
   }
-  .messageCard {
-    background: #ffe6eb;
+  button {
+    background: #ff6699;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  video {
+    width: 90%;
+    height: auto;
     border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    padding: 20px;
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #333;
-    overflow-y: auto;
-    max-height: 70vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
   }
-  #typedText1, #typedText2 { text-align: left; white-space: pre-wrap; }
+  #typingText1, #typingText2 {
+    width: 85%;
+    margin: auto;
+    color: #fff;
+    font-size: 18px;
+    white-space: pre-wrap;
+    text-shadow: 2px 2px 5px #00000088;
+  }
 </style>
 </head>
 <body>
 
-<!-- Password Screen -->
 <div id="passwordScreen">
-  <h2>Enter Password 💖</h2>
-  <input type="password" id="passwordInput" placeholder="Enter Password">
+  <h2>Enter Password 💕</h2>
+  <input type="password" id="passwordInput" placeholder="Enter password">
   <button onclick="checkPassword()">Enter</button>
 </div>
 
-<!-- Intro Message -->
-<div id="introMessage" class="hidden">💖 Happy Birthday Rah Thathsavi 💖</div>
-
-<!-- Slideshow -->
-<div id="slideshow" class="hidden">
-  <img id="slideImage" src="assets/photo1.jpg" alt="Image">
-  <div class="nav-btns">
+<div id="gallery">
+  <div class="card"><img id="photo" src="" alt="Photo"></div>
+  <div class="buttons">
     <button onclick="prevImage()">Previous</button>
     <button onclick="nextImage()">Next</button>
   </div>
 </div>
 
-<!-- Next to Message -->
-<div id="nextToMessage" class="hidden">
-  <button onclick="showMessage()">Next</button>
+<div id="videoPlayer">
+  <video id="video" controls autoplay></video>
 </div>
 
-<!-- Long Message (Two Cards) -->
-<div id="messageContainer" class="hidden">
-  <div id="messageCard1" class="messageCard"><div id="typedText1"></div></div>
-  <div id="messageCard2" class="messageCard hidden"><div id="typedText2"></div></div>
+<div id="messageScreen1">
+  <div id="typingText1"></div>
+  <div class="buttons">
+    <button onclick="showSecondMessage()">Next 💞</button>
+  </div>
+</div>
+
+<div id="messageScreen2">
+  <div id="typingText2"></div>
 </div>
 
 <script>
-  const password = "I AM IDIOT";
-  const passwordScreen = document.getElementById("passwordScreen");
-  const introMessage = document.getElementById("introMessage");
-  const slideshow = document.getElementById("slideshow");
-  const nextToMessage = document.getElementById("nextToMessage");
-  const messageContainer = document.getElementById("messageContainer");
-  const msg1 = document.getElementById("typedText1");
-  const msg2 = document.getElementById("typedText2");
+const password = "I AM IDIOT";
+const passwordScreen = document.getElementById("passwordScreen");
+const gallery = document.getElementById("gallery");
+const videoPlayer = document.getElementById("videoPlayer");
+const messageScreen1 = document.getElementById("messageScreen1");
+const messageScreen2 = document.getElementById("messageScreen2");
+const photo = document.getElementById("photo");
+const video = document.getElementById("video");
+const typingText1 = document.getElementById("typingText1");
+const typingText2 = document.getElementById("typingText2");
 
-  const images = [
-    "assets/photo1.jpg", "assets/photo2.jpg", "assets/photo3.jpg",
-    "assets/photo4.jpg", "assets/photo5.jpg", "assets/photo6.jpg",
-    "assets/photo7.jpg", "assets/photo8.jpg"
-  ];
-  let index = 0;
-  const slideImage = document.getElementById("slideImage");
+const images = [
+  "assets/photo1.jpg",
+  "assets/photo2.jpg",
+  "assets/photo3.jpg",
+  "assets/photo4.jpg",
+  "assets/photo5.jpg",
+  "assets/photo6.jpg",
+  "assets/photo7.jpg",
+  "assets/photo8.jpg"
+];
+const videos = [
+  "assets/part1.mp4",
+  "assets/part2.mp4",
+  "assets/part3.mp4",
+  "assets/part4.mp4",
+  "assets/part5.mp4",
+  "assets/part6.mp4",
+  "assets/part7.mp4"
+];
 
-  function checkPassword() {
-    const input = document.getElementById("passwordInput").value;
-    if (input === password) {
-      passwordScreen.classList.add("fade");
-      setTimeout(() => {
-        passwordScreen.classList.add("hidden");
-        introMessage.classList.remove("hidden");
-        setTimeout(() => {
-          introMessage.classList.add("fade");
-          setTimeout(() => {
-            introMessage.classList.add("hidden");
-            slideshow.classList.remove("hidden");
-          }, 1500);
-        }, 3000);
-      }, 1000);
+let index = 0;
+let videoIndex = 0;
+
+function checkPassword() {
+  const input = document.getElementById("passwordInput").value;
+  if (input === password) {
+    passwordScreen.style.display = "none";
+    gallery.style.display = "block";
+    loadImage();
+  } else {
+    alert("Wrong Password 😅");
+  }
+}
+
+function loadImage() {
+  photo.src = images[index];
+}
+
+function nextImage() {
+  index++;
+  if (index >= images.length) {
+    gallery.style.display = "none";
+    playVideos();
+  } else loadImage();
+}
+
+function prevImage() {
+  if (index > 0) index--;
+  loadImage();
+}
+
+function playVideos() {
+  videoPlayer.style.display = "block";
+  video.src = videos[videoIndex];
+  video.play();
+  video.onended = () => {
+    videoIndex++;
+    if (videoIndex < videos.length) {
+      video.src = videos[videoIndex];
+      video.play();
     } else {
-      alert("Wrong password! Try again 💔");
+      videoPlayer.style.display = "none";
+      showFirstMessage();
+    }
+  };
+}
+
+function showFirstMessage() {
+  messageScreen1.style.display = "flex";
+  messageScreen1.style.flexDirection = "column";
+  messageScreen1.style.justifyContent = "center";
+  messageScreen1.style.alignItems = "center";
+  let message1 = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche vallatho matladadam anavasaram adhi ardham chesuko.`;
+  
+  typeText(typingText1, message1, 40);
+}
+
+function showSecondMessage() {
+  messageScreen1.style.display = "none";
+  messageScreen2.style.display = "flex";
+  messageScreen2.style.flexDirection = "column";
+  messageScreen2.style.justifyContent = "center";
+  messageScreen2.style.alignItems = "center";
+  
+  let message2 = `Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi. 
+Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam. Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni misunderstandings valla manam bhadha paddam. Kani last ki malli manane unnam — adhi nijanga wonder anukovali ❤️ 
+22nd December roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I’m so happy about it 😚.
+Once again Happy Birthday Rah 💖 LIFE LONG ela nee undali ani anukuntu untta 🥰
+Have a great year Rah ☺️ IDIOT 😵‍💫
+Smile everyday, every time, in any situation ❤️
+Love you ra pottilu ❤️ My Best Best Best Friend Forever ra cutie 😊🥰... 09 NOVEMBER 2025`;
+  
+  typeText(typingText2, message2, 40);
+}
+
+function typeText(element, text, speed) {
+  let i = 0;
+  function typing() {
+    if (i < text.length) {
+      element.textContent += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
     }
   }
+  typing();
+}
 
-  function nextImage() {
-    index = (index + 1) % images.length;
-    slideImage.src = images[index];
-    if (index === images.length - 1) {
-      nextToMessage.classList.remove("hidden");
-    }
-  }
+// Prevent right-click/download
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (e.key === "PrintScreen") e.preventDefault();
+  if (e.ctrlKey && (e.key === "s" || e.key === "u")) e.preventDefault();
+});
 
-  function prevImage() {
-    index = (index - 1 + images.length) % images.length;
-    slideImage.src = images[index];
-  }
-
-  function showMessage() {
-    slideshow.classList.add("fade");
-    nextToMessage.classList.add("fade");
-    setTimeout(() => {
-      slideshow.classList.add("hidden");
-      nextToMessage.classList.add("hidden");
-      messageContainer.classList.remove("hidden");
-      typeMessage1();
-    }, 1000);
-  }
-
-  const messagePart1 = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko.`;
-
-  const messagePart2 = `And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.
-Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
-22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
-Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺️😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺️ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤️ have a wonderful 😊 Time and Smile In Your Face 
-Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 Hope you Loved This link keep the link private ❤️
-💖 Love you Rasi 💖`;
-
-  let i1 = 0, i2 = 0;
-  function typeMessage1() {
-    if (i1 < messagePart1.length) {
-      msg1.innerHTML += messagePart1.charAt(i1);
-      i1++;
-      setTimeout(typeMessage1, 40);
-    } else {
-      setTimeout(() => {
-        document.getElementById("messageCard2").classList.remove("hidden");
-        typeMessage2();
-      }, 1000);
-    }
-  }
-
-  function typeMessage2() {
-    if (i2 < messagePart2.length) {
-      msg2.innerHTML += messagePart2.charAt(i2);
-      i2++;
-      setTimeout(typeMessage2, 40);
-    }
-  }
-
-  // Protection
-  document.addEventListener('contextmenu', event => event.preventDefault());
-  document.addEventListener('keydown', e => {
-    if (e.key === 'PrintScreen') e.preventDefault();
-  });
+window.onload = () => {
+  passwordScreen.style.display = "block";
+};
 </script>
+
 </body>
 </html>
