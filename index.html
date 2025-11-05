@@ -1,371 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday Thathsavi ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Sequence</title>
 <style>
-  :root{
-    --bg1:#0f0710; --accent:#ff4da6; --card-bg:rgba(255,255,255,0.03); --muted:rgba(255,255,255,0.85);
+  body {
+    margin: 0;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#fff;background:
-    linear-gradient(180deg,#120316 0,#2b071b 100%);-webkit-font-smoothing:antialiased;overflow:hidden}
-
-  /* Password screen */
-  #pw-screen{
-    position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-    background:linear-gradient(135deg,#ffd3e6 0,#ff6aa9 100%);z-index:9999;padding:28px;text-align:center;
+  #passwordScreen, #videoScreen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    color: white;
   }
-  #pw-screen h1{color:#111;margin:0;font-size:1.6rem}
-  #pw-input{padding:12px 14px;border-radius:10px;border:none;width:320px;text-align:center;font-size:16px}
-  #pw-btn{padding:10px 18px;border-radius:10px;border:none;background:#111;color:var(--accent);cursor:pointer;font-weight:700}
-
-  /* Title screen */
-  #title-screen{display:none;position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;z-index:9000;
-    background:linear-gradient(135deg, rgba(255,77,166,0.08), rgba(255,77,166,0.16));text-align:center;padding:20px}
-  #title-screen h2{font-size:2.2rem;margin:8px 0;text-shadow:0 6px 30px rgba(0,0,0,0.6);letter-spacing:0.6px}
-  .title-anim{
-    display:inline-block;
-    transform-origin:center;
-    animation: popIn 700ms ease both;
+  #passwordScreen.active, #videoScreen.active {
+    display: flex;
   }
-  @keyframes popIn{ from{ transform: scale(.8); opacity:0 } to { transform: scale(1); opacity:1 } }
-
-  /* App layout */
-  #app{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-
-  /* Card */
-  .card{width:min(900px,92%);height:min(580px,68vh);border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden}
-  .card-inner{width:calc(100% - 48px);height:calc(100% - 48px);display:flex;align-items:center;justify-content:center;border-radius:14px;position:relative;background:rgba(0,0,0,0.22)}
-  .card img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);transition: transform .7s cubic-bezier(.2,.9,.2,1), filter .5s;pointer-events:none;user-select:none}
-  .fallback{color:var(--muted);font-size:1rem;text-align:center;padding:12px;display:none}
-
-  /* transform classes */
-  .effect-0{transform:translateY(0) scale(1) rotate(0deg)}
-  .effect-1{transform:translateY(-8px) scale(1.03) rotate(-1deg)}
-  .effect-2{transform:translateX(8px) scale(1.04) rotate(1deg)}
-  .effect-3{transform:translateY(6px) scale(1.02) rotate(-0.6deg)}
-  .effect-4{transform:translateX(-6px) scale(1.05) rotate(0.8deg)}
-  .effect-5{transform:translateY(-10px) scale(1.06) rotate(-1.2deg)}
-  .effect-6{transform:translateX(10px) scale(1.04) rotate(1.4deg)}
-  .effect-7{transform:translateY(8px) scale(1.03) rotate(-0.8deg)}
-  .effect-8{transform:translateX(-10px) scale(1.02) rotate(0.6deg)}
-  .effect-9{transform:translateY(-12px) scale(1.05) rotate(-1.6deg)}
-  .effect-10{transform:translateX(12px) scale(1.03) rotate(1.0deg)}
-
-  /* nav buttons */
-  .nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:12px;border:none;background:rgba(0,0,0,0.36);backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;z-index:10}
-  .nav:active{transform:translateY(-50%) scale(.98)}
-  #prev{left:14px} #next{right:14px}
-
-  /* controls row */
-  .controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px}
-  .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
-  #page-info{min-width:140px;text-align:center;color:var(--muted)}
-
-  /* Text slide cards */
-  .text-card{
-    width:min(900px,92%);
-    max-height:66vh;
-    padding:28px;
-    border-radius:14px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);
-    box-shadow:0 20px 60px rgba(0,0,0,0.6);
-    color:#fff;
-    display:none;
-    overflow:auto;
+  input {
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
   }
-  .text-card h3{font-size:1.6rem;margin-bottom:10px;color:var(--accent)}
-  .text-card p{white-space:pre-wrap; line-height:1.7; font-size:1.02rem; font-family: Georgia, 'Times New Roman', serif}
-
-  /* message typing cursor */
-  .typing-cursor{border-right:3px solid #fff;padding-right:6px;animation:blink 0.8s steps(1) infinite}
-  @keyframes blink{50%{border-color:transparent}}
-
-  @media (max-width:720px){
-    .card{height:58vh}
-    #pw-input{width:200px}
-    #page-info{min-width:110px;font-size:14px}
-    .text-card{padding:18px}
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff3366;
+    color: white;
+    cursor: pointer;
+  }
+  video {
+    max-width: 100%;
+    height: auto;
   }
 </style>
 </head>
 <body>
 
-  <!-- PASSWORD SCREEN -->
-  <div id="pw-screen" role="dialog" aria-modal="true">
-    <h1>Private — Enter Password</h1>
-    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
-    <div style="display:flex;gap:10px;align-items:center">
-      <button id="pw-btn">Enter</button>
-    </div>
-    <div style="margin-top:10px;font-size:13px;color:#222;background:#fff;padding:6px 10px;border-radius:8px;">(Keep this private)</div>
-  </div>
+<div id="passwordScreen" class="active">
+  <h2>Enter Password</h2>
+  <input type="password" id="passwordInput" placeholder="Enter password">
+  <button onclick="checkPassword()">Submit</button>
+</div>
 
-  <!-- TITLE SCREEN -->
-  <div id="title-screen" style="display:none;flex-direction:column;">
-    <h2 class="title-anim">Happy Birthday Thathsavi ❤️</h2>
-    <button id="start-btn" class="btn" style="margin-top:18px;padding:10px 18px;background:#111;color:var(--accent);border:none;border-radius:10px;cursor:pointer">Start</button>
-  </div>
-
-  <!-- APP -->
-  <div id="app" aria-hidden="true" style="display:none;flex-direction:column;align-items:center;justify-content:center;">
-    <div class="card" role="region" aria-label="Image card">
-      <div class="card-inner">
-        <img id="current-img" src="" alt="Photo" draggable="false" />
-        <div id="fallback" class="fallback">Image not available</div>
-      </div>
-      <button class="nav" id="prev" title="Previous (Left arrow)">&larr;</button>
-      <button class="nav" id="next" title="Next (Right arrow)">&rarr;</button>
-    </div>
-
-    <div class="controls">
-      <button class="btn" id="first-btn">First</button>
-      <div id="page-info">Photo 0 / 0</div>
-      <button class="btn" id="last-btn">Last</button>
-      <button class="btn" id="show-text-btn">Show Message</button>
-    </div>
-  </div>
-
-  <!-- Text slides (two cards) -->
-  <div id="text-card-1" class="text-card" role="region" aria-label="Message part 1">
-    <h3>To my Thathsavi</h3>
-    <p id="text1"></p>
-    <div style="display:flex;gap:10px;justify-content:center;margin-top:14px">
-      <button id="next-text-1" class="btn">Next</button>
-    </div>
-  </div>
-
-  <div id="text-card-2" class="text-card" role="region" aria-label="Message part 2">
-    <h3>Always with you</h3>
-    <p id="text2"></p>
-    <div style="display:flex;gap:10px;justify-content:center;margin-top:14px">
-      <button id="finish-btn" class="btn">Finish</button>
-    </div>
-  </div>
+<div id="videoScreen">
+  <video id="videoPlayer" controls autoplay></video>
+</div>
 
 <script>
-/* ========== Config ========== */
-const images = [
-  'assets/photo1.jpg',
-  'assets/photo2.jpg',
-  'assets/photo3.jpg',
-  'assets/photo4.jpg',
-  'assets/photo5.jpg',
-  'assets/photo6.jpg',
-  'assets/photo7.jpg',
-  'assets/photo8.jpg',
-  'assets/photo9.jpg',
-  'assets/photo10.jpg',
-  'assets/photo11.jpg'
+const correctPassword = "I AM IDIOT";
+const passwordScreen = document.getElementById("passwordScreen");
+const videoScreen = document.getElementById("videoScreen");
+const videoPlayer = document.getElementById("videoPlayer");
+
+const videoParts = [
+  "assets/part1.mp4",
+  "assets/part2.mp4",
+  "assets/part3.mp4",
+  "assets/part4.mp4",
+  "assets/part5.mp4",
+  "assets/part6.mp4",
+  "assets/part7.mp4"
 ];
 
-const PASSWORD = "I AM IDIOT";
+let currentVideo = 0;
 
-/* Full long message split into two parts exactly as requested (you gave earlier) */
-const messagePart1 = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali.`;
-const messagePart2 = `And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi. 
-Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
-22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
-Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺️😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺️ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤️ have a wonderful 😊 Time and Smile In Your Face 
-Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025`;
-
-/* ========== UI refs ========== */
-const pwScreen = document.getElementById('pw-screen');
-const pwInput = document.getElementById('pw-input');
-const pwBtn = document.getElementById('pw-btn');
-const titleScreen = document.getElementById('title-screen');
-const startBtn = document.getElementById('start-btn');
-const app = document.getElementById('app');
-const curImg = document.getElementById('current-img');
-const fallback = document.getElementById('fallback');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-const firstBtn = document.getElementById('first-btn');
-const lastBtn = document.getElementById('last-btn');
-const pageInfo = document.getElementById('page-info');
-const playTextBtn = document.getElementById('show-text-btn');
-const textCard1 = document.getElementById('text-card-1');
-const textCard2 = document.getElementById('text-card-2');
-const text1 = document.getElementById('text1');
-const text2 = document.getElementById('text2');
-const nextText1 = document.getElementById('next-text-1');
-const finishBtn = document.getElementById('finish-btn');
-
-/* ========== state ========== */
-let idx = 0;
-
-/* ========== helpers ========== */
-function updatePageInfo(){ pageInfo.textContent = `Photo ${idx+1} / ${images.length}`; }
-function showFallback(msg){ fallback.textContent = msg||'Image not available'; fallback.style.display='block'; curImg.style.display='none'; }
-function hideFallback(){ fallback.style.display='none'; curImg.style.display='block'; }
-
-function applyEffect(el,i){
-  for(let n=0;n<11;n++) el.classList.remove('effect-'+n);
-  el.classList.add('effect-'+(i % 11));
-}
-
-/* set image robustly with cache-bust to avoid stale bad upload */
-function setImage(i){
-  if(i<0) i=0; if(i>=images.length) i = images.length-1;
-  idx = i;
-  updatePageInfo();
-  hideFallback();
-  curImg.style.opacity = '0';
-  const base = images[idx];
-  const url = base + (base.includes('?') ? '&_cb=' + Date.now() : '?_cb=' + Date.now());
-  curImg.src = url;
-  curImg.alt = `Photo ${idx+1}`;
-  curImg.onload = () => {
-    curImg.style.opacity = '1';
-    curImg.style.filter = 'none';
-    applyEffect(curImg, idx);
-  };
-  curImg.onerror = () => {
-    // retry without cache-bust if first attempt failed
-    if(curImg.src.indexOf('_cb=') !== -1) {
-      curImg.src = base;
-    } else {
-      console.warn('Failed to load', images[idx]);
-      showFallback(`Unable to load image ${idx+1}`);
-    }
-  };
-}
-
-/* ========== navigation ========== */
-prevBtn.addEventListener('click', ()=> { if(idx>0) setImage(idx-1); });
-nextBtn.addEventListener('click', ()=> {
-  if(idx < images.length - 1) { setImage(idx+1); }
-  else { // finished images -> show first text card
-    showTextCard1();
-  }
-});
-firstBtn.addEventListener('click', ()=> setImage(0));
-lastBtn.addEventListener('click', ()=> setImage(images.length-1));
-playTextBtn.addEventListener('click', showTextCard1);
-
-/* keyboard nav */
-document.addEventListener('keydown', (e)=>{
-  if(pwScreen.style.display !== 'none' || titleScreen.style.display !== 'none') return;
-  if(e.key === 'ArrowLeft') prevBtn.click();
-  if(e.key === 'ArrowRight') nextBtn.click();
-});
-
-/* mobile swipe */
-let touchStartX = 0;
-document.querySelector('.card-inner').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
-document.querySelector('.card-inner').addEventListener('touchend', e => {
-  const x = e.changedTouches[0].clientX; const diff = x - touchStartX;
-  if(Math.abs(diff) > 40){ if(diff > 0) prevBtn.click(); else nextBtn.click(); }
-}, {passive:true});
-
-/* preload images lightly */
-function preload(){ images.forEach(s=>{ const im = new Image(); im.src = s; }); }
-preload();
-
-/* ========== password flow ========== */
-pwBtn.addEventListener('click', tryPassword);
-pwInput.addEventListener('keydown', e => { if(e.key === 'Enter') tryPassword(); });
-
-function tryPassword(){
-  const v = pwInput.value.trim();
-  if(v === PASSWORD){
-    pwScreen.style.display = 'none';
-    titleScreen.style.display = 'flex';
-    // small entrance anim
+function checkPassword() {
+  const entered = document.getElementById("passwordInput").value;
+  if (entered === correctPassword) {
+    passwordScreen.classList.remove("active");
+    videoScreen.classList.add("active");
+    playNextVideo();
   } else {
-    alert('Wrong password — try again.');
-    pwInput.value = '';
-    pwInput.focus();
+    alert("Wrong Password!");
   }
 }
 
-startBtn && startBtn.addEventListener('click', ()=>{
-  titleScreen.style.display = 'none';
-  app.style.display = 'flex';
-  setImage(0);
-  updatePageInfo();
-  nextBtn.focus();
-});
-
-/* ========== text cards & typing ========== */
-function showTextCard1(){
-  app.style.display = 'none';
-  textCard1.style.display = 'block';
-  typeText(messagePart1, text1, ()=> {
-    // typing finished; show next button (already visible)
-    // user clicks to proceed
-  });
-}
-nextText1.addEventListener('click', ()=>{
-  textCard1.style.display = 'none';
-  textCard2.style.display = 'block';
-  typeText(messagePart2, text2, ()=> {
-    // finished; keep finish button visible
-  });
-});
-finishBtn.addEventListener('click', ()=>{
-  alert('Message finished — you can close this page or share it with Rasi ❤️');
-});
-
-/* realistic typing */
-function typeText(text, container, cb){
-  container.textContent = '';
-  let i = 0;
-  function step(){
-    if(i >= text.length){ if(cb) cb(); return; }
-    const ch = text[i++];
-    container.textContent += ch;
-    let delay = Math.random() * (80 - 18) + 18;
-    if(ch === ',') delay += 100;
-    if(ch === '.' || ch === '!' || ch === '?') delay += 300;
-    if(ch === '\n') delay += 30;
-    // small cursor effect
-    container.classList.add('typing-cursor');
-    setTimeout(()=> {
-      container.classList.remove('typing-cursor');
-      setTimeout(step, delay);
-    }, 0);
+function playNextVideo() {
+  if (currentVideo < videoParts.length) {
+    videoPlayer.src = videoParts[currentVideo];
+    videoPlayer.play();
+    videoPlayer.onended = () => {
+      currentVideo++;
+      playNextVideo();
+    };
+  } else {
+    videoScreen.innerHTML = "<h2 style='color:white;'>All videos finished 🎬</h2>";
   }
-  step();
 }
-
-/* ========== protections (best-effort) ========== */
-/* disable right click */
-document.addEventListener('contextmenu', e => e.preventDefault());
-/* prevent drag */
-document.addEventListener('dragstart', e => { if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault(); }, false);
-/* block common shortcuts */
-document.addEventListener('keydown', e => {
-  if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase()==='s' || e.key.toLowerCase()==='u' || e.key === 'F12')){ e.preventDefault(); alert('This content is private.'); }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p'){ e.preventDefault(); alert('Printing disabled.'); }
-});
-/* PrintScreen deterrent */
-document.addEventListener('keyup', e => {
-  if(e.key === 'PrintScreen' || e.keyCode === 44){
-    const overlay = document.createElement('div');
-    overlay.style.position='fixed'; overlay.style.inset='0'; overlay.style.zIndex='99999';
-    overlay.style.backdropFilter='blur(6px)'; overlay.style.background='rgba(0,0,0,0.45)';
-    overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center';
-    overlay.style.color='white'; overlay.style.fontSize='18px';
-    overlay.textContent = 'Screen capture detected — private content.';
-    document.body.appendChild(overlay);
-    setTimeout(()=> overlay.remove(), 1200);
-    try{ navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
-  }
-});
-/* disable long-touch save on mobile for images */
-curImg.addEventListener('touchstart', e=> e.preventDefault(), {passive:false});
-
-/* initial state */
-app.style.display = 'none';
-titleScreen.style.display = 'none';
-document.getElementById('text-card-1').style.display = 'none';
-document.getElementById('text-card-2').style.display = 'none';
-updatePageInfo();
 </script>
+
 </body>
 </html>
