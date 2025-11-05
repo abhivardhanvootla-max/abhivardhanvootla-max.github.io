@@ -13,7 +13,6 @@
     align-items: center;
     background: linear-gradient(135deg, #ffd6e6, #ffb3c6);
     font-family: 'Poppins', sans-serif;
-    overflow: hidden;
   }
   .hidden { display: none; }
 
@@ -22,7 +21,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
   }
   #passwordScreen h2 {
@@ -49,29 +47,37 @@
     cursor: pointer;
   }
 
-  /* Video Player Card */
+  /* Video Section */
   #videoSection {
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100%;
   }
   .card {
     width: min(900px, 90%);
-    height: auto;
     background: white;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
   }
   video {
     width: 100%;
     border-radius: 12px;
     outline: none;
+  }
+  .controls {
+    margin-top: 15px;
+  }
+  .controls button {
+    background: #ff4081;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    cursor: pointer;
   }
 </style>
 </head>
@@ -89,6 +95,11 @@
 <div id="videoSection">
   <div class="card">
     <video id="videoPlayer" controls autoplay></video>
+    <div class="controls">
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">Next ⏭</button>
+    </div>
+    <p id="videoCounter" style="margin-top:8px; color:#555;"></p>
   </div>
 </div>
 
@@ -105,38 +116,59 @@ const videos = [
 ];
 let currentVideo = 0;
 
-document.getElementById("passwordButton").addEventListener("click", checkPassword);
+const passwordScreen = document.getElementById("passwordScreen");
+const videoSection = document.getElementById("videoSection");
+const videoPlayer = document.getElementById("videoPlayer");
+const videoCounter = document.getElementById("videoCounter");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
 
-function checkPassword() {
+// Check password
+document.getElementById("passwordButton").addEventListener("click", () => {
   const entered = document.getElementById("passwordInput").value.trim();
   if (entered === PASSWORD) {
-    document.getElementById("passwordScreen").classList.add("hidden");
-    startVideos();
+    passwordScreen.classList.add("hidden");
+    startVideoPlayer();
   } else {
     document.getElementById("errorMsg").style.display = "block";
   }
-}
+});
 
-function startVideos() {
-  const videoSection = document.getElementById("videoSection");
-  const player = document.getElementById("videoPlayer");
+function startVideoPlayer() {
   videoSection.style.display = "flex";
-  player.src = videos[currentVideo];
-  player.play();
-
-  player.addEventListener("ended", () => {
-    currentVideo++;
-    if (currentVideo < videos.length) {
-      player.src = videos[currentVideo];
-      player.play();
-    } else {
-      player.pause();
-      alert("All videos finished 💖");
-    }
-  });
+  loadVideo(currentVideo);
 }
 
-// Protection
+function loadVideo(index) {
+  if (index < 0 || index >= videos.length) return;
+  currentVideo = index;
+  videoPlayer.src = videos[currentVideo];
+  videoPlayer.play();
+  updateCounter();
+}
+
+function updateCounter() {
+  videoCounter.textContent = `Video ${currentVideo + 1} of ${videos.length}`;
+}
+
+// Auto next when one video ends
+videoPlayer.addEventListener("ended", () => {
+  if (currentVideo < videos.length - 1) {
+    loadVideo(currentVideo + 1);
+  } else {
+    alert("All videos completed 💖");
+  }
+});
+
+// Controls
+nextBtn.addEventListener("click", () => {
+  if (currentVideo < videos.length - 1) loadVideo(currentVideo + 1);
+});
+prevBtn.addEventListener("click", () => {
+  if (currentVideo > 0) loadVideo(currentVideo - 1);
+});
+
+// Disable right-click & some keys
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && ['s', 'u', 'p'].includes(e.key.toLowerCase())) e.preventDefault();
