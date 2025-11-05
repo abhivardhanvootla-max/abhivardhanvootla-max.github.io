@@ -3,176 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Thathsavi ❤️</title>
+<title>Happy Birthday Thathsavi ❤️</title>
 <style>
-  body, html {
-    margin: 0; padding: 0;
-    height: 100%; width: 100%;
-    background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffd6e0, #fcbad3);
     font-family: 'Poppins', sans-serif;
-    overflow: hidden;
-    user-select: none;
   }
-  .center { display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+
+  .hidden { display: none; }
+  .center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
   /* Password Screen */
-  #passwordScreen input {
-    padding: 10px; border-radius: 10px; border: none; outline: none;
-    font-size: 18px; text-align: center;
+  #password-screen {
+    text-align: center;
   }
-  #passwordScreen button {
-    margin-top: 15px; padding: 10px 20px; font-size: 18px;
-    border: none; border-radius: 10px; cursor: pointer;
-    background-color: #ff6f91; color: white;
+  #password-screen input {
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+  }
+  #password-screen button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #ff6f91;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
   }
 
   /* Greeting */
   #greeting {
-    display: none;
-    font-size: 2rem; font-weight: bold; color: #ff3366;
+    text-align: center;
+    font-size: 2.2rem;
+    color: #e60073;
     animation: fadeIn 2s ease-in-out;
   }
 
-  /* Image slideshow */
-  #slideshow { display: none; text-align: center; }
-  .slide img {
-    max-width: 90vw; max-height: 80vh;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Slideshow */
+  #slideshow {
+    text-align: center;
+  }
+  #slide-img {
+    max-width: 85vw;
+    max-height: 75vh;
+    border-radius: 12px;
     object-fit: contain;
-    border-radius: 20px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
   }
-  .nav-buttons { margin-top: 15px; }
-  .nav-buttons button {
-    background-color: #ff6f91; border: none; color: white;
-    padding: 10px 20px; border-radius: 10px; margin: 0 10px;
-    font-size: 16px; cursor: pointer;
+  .controls {
+    margin-top: 15px;
   }
-
-  /* Typing effect */
-  #message1, #message2 {
-    display: none;
-    font-size: 1.2rem;
-    color: #333;
-    padding: 20px;
-    max-width: 90vw;
-    line-height: 1.6;
-    text-align: center;
-    background: rgba(255,255,255,0.6);
-    border-radius: 15px;
-    animation: fadeIn 1.5s ease-in-out;
+  .controls button {
+    background: #ff6f91;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 0 10px;
+    cursor: pointer;
   }
-
-  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-
 </style>
 </head>
-<body oncontextmenu="return false">
+<body>
 
-<div id="passwordScreen" class="center">
+<!-- Password Screen -->
+<div id="password-screen" class="center">
   <h2>Enter Password 💕</h2>
-  <input type="password" id="passwordInput" placeholder="Enter password">
+  <input type="password" id="password" placeholder="Enter password">
   <button onclick="checkPassword()">Enter</button>
+  <p id="error" style="color:red;display:none;">Wrong password 😅</p>
 </div>
 
-<div id="mainContent" class="center" style="display:none; flex-direction:column;">
-  <div id="greeting">Happy Birthday Thathsavi ❤️</div>
+<!-- Greeting -->
+<div id="greeting" class="center hidden">
+  <h1>Happy Birthday Thathsavi ❤️</h1>
+</div>
 
-  <div id="slideshow">
-    <div class="slide"><img id="slideImage" src="" alt=""></div>
-    <div class="nav-buttons">
-      <button onclick="prevImage()">Previous</button>
-      <button onclick="nextImage()">Next</button>
-    </div>
+<!-- Slideshow -->
+<div id="slideshow" class="center hidden">
+  <img id="slide-img" src="" alt="Photo">
+  <div class="controls">
+    <button onclick="prevImage()">Previous</button>
+    <button onclick="nextImage()">Next</button>
   </div>
-
-  <div id="message1"></div>
-  <div id="message2"></div>
 </div>
 
 <script>
 const PASSWORD = "I AM IDIOT";
+const images = [
+  "assets/photo1.jpg","assets/photo2.jpg","assets/photo3.jpg","assets/photo4.jpg",
+  "assets/photo5.jpg","assets/photo6.jpg","assets/photo7.jpg","assets/photo8.jpg",
+  "assets/photo9.jpg","assets/photo10.jpg","assets/photo11.jpg"
+];
+let current = 0;
 
 function checkPassword() {
-  const input = document.getElementById("passwordInput").value.trim();
+  const input = document.getElementById("password").value.trim();
   if (input === PASSWORD) {
-    document.getElementById("passwordScreen").style.display = "none";
+    document.getElementById("password-screen").classList.add("hidden");
     showGreeting();
   } else {
-    alert("Wrong Password! 😅");
+    document.getElementById("error").style.display = "block";
   }
 }
 
 function showGreeting() {
   const greet = document.getElementById("greeting");
-  greet.style.display = "block";
-  setTimeout(showSlideshow, 2500);
+  greet.classList.remove("hidden");
+  setTimeout(() => {
+    greet.classList.add("hidden");
+    startSlideshow();
+  }, 2500);
 }
 
-const images = [
-  "photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg","photo5.jpg",
-  "photo6.jpg","photo7.jpg","photo8.jpg","photo9.jpg","photo10.jpg","photo11.jpg"
-];
-let currentIndex = 0;
+function startSlideshow() {
+  document.getElementById("slideshow").classList.remove("hidden");
+  showImage();
+}
 
-function showSlideshow() {
-  document.getElementById("greeting").style.display = "none";
-  document.getElementById("slideshow").style.display = "block";
-  document.getElementById("slideImage").src = "assets/" + images[currentIndex];
+function showImage() {
+  const img = document.getElementById("slide-img");
+  img.src = images[current];
 }
 
 function nextImage() {
-  if (currentIndex < images.length - 1) {
-    currentIndex++;
-    document.getElementById("slideImage").src = "assets/" + images[currentIndex];
+  if (current < images.length - 1) {
+    current++;
+    showImage();
   } else {
-    document.getElementById("slideshow").style.display = "none";
-    showMessages();
+    alert("End of images reached!");
   }
 }
 
 function prevImage() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    document.getElementById("slideImage").src = "assets/" + images[currentIndex];
+  if (current > 0) {
+    current--;
+    showImage();
   }
 }
-
-const messagePart1 = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali.`;
-const messagePart2 = `And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche vallatho matladadam anavasaram adhi ardham chesuko. ... Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025`;
-
-function showMessages() {
-  const msg1 = document.getElementById("message1");
-  const msg2 = document.getElementById("message2");
-  msg1.style.display = "block";
-  typeText(msg1, messagePart1, () => {
-    msg1.style.display = "none";
-    msg2.style.display = "block";
-    typeText(msg2, messagePart2);
-  });
-}
-
-function typeText(element, text, callback) {
-  let i = 0;
-  element.textContent = "";
-  function typing() {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
-      setTimeout(typing, 40);
-    } else if (callback) {
-      setTimeout(callback, 1000);
-    }
-  }
-  typing();
-}
-
-// Screen capture prevention
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'PrintScreen' || (e.ctrlKey && e.key === 'p')) {
-    e.preventDefault();
-    alert('Screenshot disabled!');
-  }
-});
 </script>
+
 </body>
 </html>
