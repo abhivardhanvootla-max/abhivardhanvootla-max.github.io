@@ -1,189 +1,159 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Happy Birthday Thathsavi ❤️</title>
 <style>
-  :root{
-    --bg1: #ffe6ed;
-    --accent: #ff2e7a;
-    --card-bg: rgba(255,255,255,0.85);
-    --muted: rgba(0,0,0,0.55);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family: 'Poppins', system-ui, -apple-system, sans-serif;background:
-    linear-gradient(135deg,#fff0f4 0,#ffd6e6 100%);color:#111;overflow:hidden}
+:root{
+  --accent:#ff2e7a;
+  --card-bg:rgba(255,255,255,0.9);
+}
+html,body{
+  height:100%;margin:0;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#ffe6ed,#ffd6e6);
+  overflow:hidden;color:#111;
+}
+.center{display:flex;align-items:center;justify-content:center;flex-direction:column;height:100vh;gap:12px;z-index:2;position:relative}
 
-  .center-full{display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;flex-direction:column;gap:12px}
-  #pwScreen{padding:26px;border-radius:14px;background:linear-gradient(180deg,#fff 0,#ffeef7 100%);box-shadow:0 18px 60px rgba(0,0,0,0.08);min-width:320px}
-  #pwScreen h2{margin:0 0 8px;color:#222}
-  #pwInput{width:320px;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:16px}
-  #pwBtn{margin-top:12px;padding:10px 18px;border-radius:10px;border:none;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+/* Floating hearts */
+#hearts{position:fixed;inset:0;overflow:hidden;z-index:0}
+.heart{
+  position:absolute;width:20px;height:20px;background:rgba(255,105,150,0.6);
+  transform:rotate(45deg);animation:float 8s linear infinite;
+}
+.heart::before,.heart::after{
+  content:"";position:absolute;width:20px;height:20px;border-radius:50%;
+  background:rgba(255,105,150,0.6);
+}
+.heart::before{top:-10px;left:0}.heart::after{left:-10px;top:0}
+@keyframes float{from{transform:translateY(100vh)scale(.8)rotate(45deg);opacity:1}
+to{transform:translateY(-10vh)scale(1.2)rotate(45deg);opacity:0}}
 
-  #greetingWrap{display:none;align-items:center;justify-content:center;height:100vh;flex-direction:column;text-align:center}
-  #greeting {font-size:3.2rem; color:var(--accent); font-weight:800; letter-spacing:0.6px; text-shadow:0 6px 20px rgba(255,45,122,0.12)}
-  @keyframes greetIn { from { transform:scale(.9); opacity:0 } to { transform:scale(1); opacity:1 } }
+/* Password box */
+#pw{padding:26px;border-radius:14px;background:linear-gradient(180deg,#fff,#ffeef7);
+ box-shadow:0 18px 60px rgba(0,0,0,.1);}
+#pw input{padding:12px;border-radius:10px;border:1px solid #ddd;font-size:16px;width:260px}
+#pw button{margin-top:12px;padding:10px 18px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600}
 
-  #slideshowWrap, #videoWrap{display:none;height:100vh;align-items:center;justify-content:center;flex-direction:column;gap:14px}
-  .card {
-    width: min(900px, 92%);
-    max-width:920px;
-    height: min(560px, 70vh);
-    border-radius: 18px;
-    background: var(--card-bg);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow: 0 30px 90px rgba(0,0,0,0.12);
-    position:relative;
-    overflow:hidden;
-    padding:18px;
-  }
-  .card-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5)); }
-  #slideImg, #videoPlayer {
-    max-width:100%;
-    max-height:100%;
-    object-fit:contain;
-    border-radius:12px;
-    transition: transform 700ms cubic-bezier(.2,.9,.2,1);
-    box-shadow:0 18px 40px rgba(0,0,0,0.15);
-    user-select:none;
-  }
+/* Greeting */
+#greet{font-size:3rem;color:var(--accent);text-shadow:0 6px 18px rgba(255,45,122,.2);animation:fade 1.2s ease both}
+@keyframes fade{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 
-  .nav-btn { position:absolute; top:50%; transform:translateY(-50%); width:56px; height:56px; border-radius:12px; border:none; cursor:pointer; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.08); font-size:20px; color:var(--accent) }
-  #prevBtn{ left:14px } #nextBtn{ right:14px }
-  .controls-row { display:flex; gap:8px; align-items:center; justify-content:center; margin-top:12px }
-  .btn { padding:8px 14px; border-radius:10px; background:transparent; border:1px solid rgba(0,0,0,0.06); cursor:pointer; color:#111; }
+/* Cards */
+.card{width:min(900px,92%);max-width:920px;height:min(560px,70vh);border-radius:18px;
+ background:var(--card-bg);box-shadow:0 30px 90px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:18px}
+.card-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#slide,#video{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px}
 
-  #messageWrap { display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55)); z-index:50; padding:24px; flex-direction:column; gap:20px; }
-  .msg-card { width:min(920px,95%); max-height:82vh; overflow:auto; background:white; color:#111; border-radius:12px; padding:22px; box-shadow:0 30px 80px rgba(0,0,0,0.45); font-family: Georgia, 'Times New Roman', serif; font-size:1rem; line-height:1.7 }
-  #replyBtn {
-    background: var(--accent); color: white;
-    border: none; border-radius: 10px; padding: 10px 22px; font-size: 16px;
-    cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-  }
+/* Message cards */
+#message{display:none;flex-direction:column;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:5;padding:24px;gap:20px}
+.msg{width:min(920px,95%);max-height:80vh;overflow-y:auto;background:#fff;padding:20px;border-radius:12px;
+ box-shadow:0 20px 60px rgba(0,0,0,.4);font-family:Georgia,serif;line-height:1.7;font-size:1rem}
+#reply{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-size:16px;cursor:pointer;box-shadow:0 6px 15px rgba(0,0,0,.15)}
 
-  @media (max-width:720px){
-    #greeting{font-size:2rem}
-    .card{height:56vh}
-    .nav-btn{width:44px;height:44px;font-size:18px}
-  }
+@media(max-width:720px){#greet{font-size:2rem}.card{height:56vh}}
 </style>
 </head>
 <body>
+<div id="hearts"></div>
 
-<div id="pwScreen" class="center-full">
-  <div id="pwBox" style="text-align:left; width:360px;">
-    <h2>Enter Password 💕</h2>
-    <input id="pwInput" type="password" placeholder="Enter password" />
-    <div style="margin-top:10px;">
-      <button id="pwBtn">Enter</button>
-    </div>
+<div id="pw" class="center">
+  <h2>Enter Password 💕</h2>
+  <input id="pwInput" type="password" placeholder="Enter password"/>
+  <button id="pwBtn">Enter</button>
+</div>
+
+<div id="greetWrap" class="center" style="display:none">
+  <div id="greet">🎁 HAPPY BIRTHDAY THATHSAVI ❤️💖</div>
+</div>
+
+<div id="slides" class="center" style="display:none">
+  <div class="card"><div class="card-inner"><img id="slide" src=""></div></div>
+  <div style="margin-top:10px">
+    <button id="prev">Prev</button>
+    <button id="next">Next</button>
   </div>
 </div>
 
-<div id="greetingWrap" class="center-full" style="display:none">
-  <div id="greeting" style="animation:greetIn .8s ease both">HAPPY BIRTHDAY THATHSAVI ❤️</div>
+<div id="videos" class="center" style="display:none">
+  <div class="card"><div class="card-inner"><video id="video" controls autoplay muted></video></div></div>
 </div>
 
-<div id="slideshowWrap" style="display:none;">
-  <div class="card">
-    <div class="card-inner">
-      <img id="slideImg" src="" alt="photo" />
-    </div>
-    <button class="nav-btn" id="prevBtn">&larr;</button>
-    <button class="nav-btn" id="nextBtn">&rarr;</button>
-  </div>
-  <div class="controls-row">
-    <button class="btn" id="firstBtn">First</button>
-    <div id="pageInfo" style="min-width:160px; text-align:center; color:var(--muted)"></div>
-    <button class="btn" id="lastBtn">Last</button>
-    <button class="btn" id="finishBtn">Finish & Show Videos</button>
-  </div>
-</div>
-
-<!-- Video Section -->
-<div id="videoWrap" style="display:none;">
-  <div class="card">
-    <div class="card-inner">
-      <video id="videoPlayer" controls autoplay muted></video>
-    </div>
-  </div>
-</div>
-
-<div id="messageWrap" style="display:none;">
-  <div id="messageCard1" class="msg-card" style="display:none"></div>
-  <div id="messageCard2" class="msg-card" style="display:none"></div>
-  <button id="replyBtn" style="display:none;">💬 Reply</button>
+<div id="message" class="center">
+  <div id="m1" class="msg" style="display:none"></div>
+  <div id="m2" class="msg" style="display:none"></div>
+  <button id="reply" style="display:none">💬 Reply</button>
 </div>
 
 <script>
-const PASSWORD = "I AM IDIOT";
-const images = [
-  'assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg',
-  'assets/photo6.jpg','assets/photo7.jpg','assets/photo8.jpg','assets/photo9.jpg','assets/photo10.jpg','assets/photo11.jpg'
-];
-const videos = [
-  'assets/part1.mp4','assets/part2.mp4','assets/part3.mp4','assets/part4.mp4',
-  'assets/part5.mp4','assets/part6.mp4','assets/part7.mp4'
-];
-const messagePart1 = `Hi Thathsavi Happy Birthday Rah❤ It's Being 18 months rah neetho e travelling life long gurthu untundhi...`;
-const messagePart2 = `Love You ra pottilu ❤ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 ...`;
+const PASSWORD="I AM IDIOT";
+const imgs=['assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg','assets/photo6.jpg','assets/photo7.jpg','assets/photo8.jpg','assets/photo9.jpg','assets/photo10.jpg','assets/photo11.jpg'];
+const vids=['assets/part1.mp4','assets/part2.mp4','assets/part3.mp4','assets/part4.mp4','assets/part5.mp4','assets/part6.mp4','assets/part7.mp4'];
 
-const pwScreen=document.getElementById('pwScreen'),pwInput=document.getElementById('pwInput'),pwBtn=document.getElementById('pwBtn');
-const greetingWrap=document.getElementById('greetingWrap');
-const slideshowWrap=document.getElementById('slideshowWrap'),slideImg=document.getElementById('slideImg');
-const prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn');
-const firstBtn=document.getElementById('firstBtn'),lastBtn=document.getElementById('lastBtn'),finishBtn=document.getElementById('finishBtn');
-const pageInfo=document.getElementById('pageInfo');
-const videoWrap=document.getElementById('videoWrap'),videoPlayer=document.getElementById('videoPlayer');
-const messageWrap=document.getElementById('messageWrap'),messageCard1=document.getElementById('messageCard1'),messageCard2=document.getElementById('messageCard2'),replyBtn=document.getElementById('replyBtn');
+const msg1=`Hi Thathsavi Happy Birthday Rah❤ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.`;
+const msg2=`Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
+22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
+Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤ have a wonderful 😊 Time and Smile In Your Face 
+Love You ra pottilu ❤ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 .
+Hope You Enjoyed This Link And Make Sure Don't share the Link Because If You Share this it anyone It will Be deactivated In 2 seconds..... Bye ... Love U Ra Thachu 💖💞💘`;
 
-let idx=0;
-function updatePageInfo(){pageInfo.textContent=`Photo ${idx+1} / ${images.length}`;}
-function setSlide(i){if(i<0)i=0;if(i>=images.length)i=images.length-1;idx=i;slideImg.src=images[idx];updatePageInfo();}
-prevBtn.onclick=()=>{if(idx>0)setSlide(idx-1)};
-nextBtn.onclick=()=>{if(idx<images.length-1)setSlide(idx+1);else startVideos()};
-firstBtn.onclick=()=>setSlide(0);
-lastBtn.onclick=()=>setSlide(images.length-1);
-finishBtn.onclick=startVideos;
+const pw=document.getElementById('pw'),pwIn=document.getElementById('pwInput'),pwBtn=document.getElementById('pwBtn');
+const greet=document.getElementById('greetWrap'),slides=document.getElementById('slides'),slide=document.getElementById('slide');
+const prev=document.getElementById('prev'),next=document.getElementById('next');
+const vidsDiv=document.getElementById('videos'),video=document.getElementById('video');
+const msgWrap=document.getElementById('message'),m1=document.getElementById('m1'),m2=document.getElementById('m2'),reply=document.getElementById('reply');
+let i=0;
+pwBtn.onclick=()=>check();
+pwIn.onkeydown=e=>{if(e.key==='Enter')check()};
+function check(){
+ if(pwIn.value.trim()===PASSWORD){
+  pw.style.display='none';greet.style.display='flex';
+  setTimeout(()=>{greet.style.display='none';slides.style.display='flex';showSlide(0)},2000);
+ }else alert('Wrong password 😅');
+}
+function showSlide(n){i=n;slide.src=imgs[i]}
+prev.onclick=()=>{if(i>0)showSlide(i-1)};
+next.onclick=()=>{if(i<imgs.length-1)showSlide(i+1);else playVids()};
 
-pwBtn.onclick=tryUnlock;pwInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock();});
-function tryUnlock(){if(pwInput.value.trim()===PASSWORD){pwScreen.style.display='none';greetingWrap.style.display='flex';
-setTimeout(()=>{greetingWrap.style.display='none';slideshowWrap.style.display='flex';setSlide(0)},2000);}
-else alert('Wrong password 😅');}
-
-function startVideos(){
-  slideshowWrap.style.display='none';
-  videoWrap.style.display='flex';
-  let v=0;
-  videoPlayer.src=videos[v];
-  videoPlayer.play();
-  videoPlayer.onended=()=>{
-    v++;
-    if(v<videos.length){videoPlayer.src=videos[v];videoPlayer.play();}
-    else{videoWrap.style.display='none';showMessages();}
-  };
+function playVids(){
+ slides.style.display='none';vidsDiv.style.display='flex';
+ let v=0;video.src=vids[v];video.play();
+ video.onended=()=>{v++;if(v<vids.length){video.src=vids[v];video.play();}else{vidsDiv.style.display='none';showMsgs();}}
 }
 
-function showMessages(){
-  messageWrap.style.display='flex';
-  messageCard1.style.display='block';
-  typeText(messagePart1,messageCard1,()=>{
-    messageCard1.style.display='none';
-    messageCard2.style.display='block';
-    typeText(messagePart2,messageCard2,()=>{
-      replyBtn.style.display='block';
-    });
-  });
+function showMsgs(){
+ msgWrap.style.display='flex';m1.style.display='block';
+ type(msg1,m1,()=>{m1.style.display='none';m2.style.display='block';type(msg2,m2,()=>{reply.style.display='block'})});
 }
+function type(t,el,done){el.textContent='';let c=0;function s(){if(c>=t.length){done&&done();return;}el.textContent+=t[c++];el.scrollTop=el.scrollHeight;setTimeout(s,25);}s();}
 
-function typeText(text,el,done){el.textContent='';let i=0;function t(){if(i>=text.length){done&&done();return;}
-el.textContent+=text.charAt(i++);setTimeout(t,30);}t();}
+reply.onclick=()=>window.open("https://wa.me/919948264097?text="+encodeURIComponent("Hi Thachu 💕 loved your surprise so much 🥰❤️ it really made my day!"),"_blank");
 
-// reply button link (edit if you want)
-replyBtn.onclick=()=>window.open("https://wa.me/","_blank");
+/* Floating hearts */
+function hearts(){
+ const h=document.getElementById('hearts');
+ const e=document.createElement('div');e.className='heart';
+ e.style.left=Math.random()*100+'vw';
+ e.style.animationDuration=(6+Math.random()*4)+'s';
+ e.style.opacity=Math.random();e.style.width=e.style.height=(10+Math.random()*12)+'px';
+ h.appendChild(e);setTimeout(()=>e.remove(),10000);
+}
+setInterval(hearts,700);
+
+/* Protections */
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+ if((e.ctrlKey||e.metaKey)&&['s','u','p','i'].includes(e.key.toLowerCase())){e.preventDefault();alert('Action disabled 💕');}
+ if(e.key==='PrintScreen'||e.keyCode===44){
+  const o=document.createElement('div');
+  Object.assign(o.style,{position:'fixed',inset:0,backdropFilter:'blur(6px)',background:'rgba(0,0,0,.4)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',zIndex:99999,fontSize:'20px'});
+  o.textContent='📸 Screenshot disabled';
+  document.body.appendChild(o);setTimeout(()=>o.remove(),1500);
+  try{navigator.clipboard.writeText('');}catch{}
+ }
+});
 </script>
 </body>
 </html>
