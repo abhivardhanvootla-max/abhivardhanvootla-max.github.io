@@ -3,336 +3,237 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday Thathsavi ❤️ (Private)</title>
+<title>Happy Birthday Thathsavi ❤️</title>
 <style>
   :root{
-    --bg1:#0b0710;
-    --accent:#ff4da6;
-    --card-bg:rgba(255,255,255,0.03);
-    --muted:rgba(255,255,255,0.88);
+    --bg1: #ffe6ed;
+    --accent: #ff2e7a;
+    --card-bg: rgba(255,255,255,0.85);
+    --muted: rgba(0,0,0,0.55);
   }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:#fff;background:
-    linear-gradient(180deg,#120316 0,#2b0718 100%);-webkit-font-smoothing:antialiased;overflow:hidden}
-  /* Password screen */
-  #pw-screen{
-    position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-    background:linear-gradient(135deg,#ffd7ea 0,#ff6aa9 100%);z-index:9999;padding:28px;
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family: 'Poppins', system-ui, -apple-system, sans-serif;background:
+    linear-gradient(135deg,#fff0f4 0,#ffd6e6 100%);color:#111;overflow:hidden}
+
+  /* ---------- password screen ---------- */
+  .center-full{display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;flex-direction:column;gap:12px}
+  #pwScreen{padding:26px;border-radius:14px;background:linear-gradient(180deg,#fff 0,#ffeef7 100%);box-shadow:0 18px 60px rgba(0,0,0,0.08);min-width:320px}
+  #pwScreen h2{margin:0 0 8px;color:#222}
+  #pwInput{width:320px;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:16px}
+  #pwBtn{margin-top:12px;padding:10px 18px;border-radius:10px;border:none;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+
+  /* ---------- greeting ---------- */
+  #greetingWrap{display:none;align-items:center;justify-content:center;height:100vh;flex-direction:column;text-align:center}
+  #greeting {font-size:3.2rem; color:var(--accent); font-weight:800; letter-spacing:0.6px; text-shadow:0 6px 20px rgba(255,45,122,0.12)}
+  @keyframes greetIn { from { transform:scale(.9); opacity:0 } to { transform:scale(1); opacity:1 } }
+
+  /* ---------- slideshow card ---------- */
+  #slideshowWrap{display:none;height:100vh;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+  .card {
+    width: min(900px, 92%); max-width:920px;
+    height: min(560px, 70vh);
+    border-radius: 18px;
+    background: var(--card-bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 30px 90px rgba(0,0,0,0.12);
+    position:relative;
+    overflow:hidden;
+    padding:18px;
   }
-  #pw-screen h1{color:#111;margin:0;font-size:1.6rem}
-  #pw-input{padding:12px 14px;border-radius:10px;border:none;width:320px;text-align:center;font-size:16px}
-  #pw-btn{padding:10px 16px;border-radius:10px;border:none;background:#111;color:var(--accent);cursor:pointer;font-weight:600}
-  #pw-note{font-size:13px;color:#222;background:#fff;padding:6px 10px;border-radius:8px}
+  .card-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5)); }
+  #slideImg {
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain; /* preserve real ratio, don't stretch */
+    border-radius:12px;
+    transition: transform 700ms cubic-bezier(.2,.9,.2,1), filter 400ms;
+    box-shadow:0 18px 40px rgba(0,0,0,0.15);
+    user-select:none; -webkit-user-drag:none;
+  }
+  /* small transform variants for each image */
+  .effect-0{transform:scale(1) rotate(0deg)}
+  .effect-1{transform:scale(1.03) translateY(-6px) rotate(-1deg)}
+  .effect-2{transform:scale(1.04) translateX(6px) rotate(0.8deg)}
+  .effect-3{transform:scale(1.02) translateY(8px) rotate(-0.6deg)}
+  .effect-4{transform:scale(1.05) translateX(-8px) rotate(1.2deg)}
+  .effect-5{transform:scale(1.06) translateY(-10px) rotate(-1.2deg)}
+  .effect-6{transform:scale(1.03) translateX(10px) rotate(1.4deg)}
+  .effect-7{transform:scale(1.02) translateY(4px) rotate(-0.8deg)}
 
-  /* App layout */
-  #app{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;visibility:hidden}
+  /* nav controls */
+  .nav-btn { position:absolute; top:50%; transform:translateY(-50%); width:56px; height:56px; border-radius:12px; border:none; cursor:pointer; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.08); font-size:20px; color:var(--accent) }
+  #prevBtn{ left:14px } #nextBtn{ right:14px }
+  .controls-row { display:flex; gap:8px; align-items:center; justify-content:center; margin-top:12px }
+  .btn { padding:8px 14px; border-radius:10px; background:transparent; border:1px solid rgba(0,0,0,0.06); cursor:pointer; color:#111; }
 
-  /* Title screen (after password) */
-  #title-screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
-  #title-screen h2{font-size:2.2rem;letter-spacing:0.6px;margin:0;text-shadow:0 6px 30px rgba(255,77,166,0.16)}
-  #title-screen p{color:var(--muted);margin-top:6px}
+  /* ---------- message cards ---------- */
+  #messageWrap { display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55)); z-index:50; padding:24px }
+  .msg-card { width:min(920px,95%); max-height:82vh; overflow:auto; background:white; color:#111; border-radius:12px; padding:22px; box-shadow:0 30px 80px rgba(0,0,0,0.45); font-family: Georgia, 'Times New Roman', serif; font-size:1rem; line-height:1.7 }
+  .msg-card + .msg-card { margin-top:18px }
 
-  /* Card */
-  .card{width:min(860px,92%);height:min(540px,66vh);border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden}
-  .card-inner{width:calc(100% - 48px);height:calc(100% - 48px);display:flex;align-items:center;justify-content:center;border-radius:14px;position:relative;background:rgba(0,0,0,0.18)}
-  .card img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,0.6);
-    transition: transform .72s cubic-bezier(.2,.9,.2,1), filter .5s;pointer-events:none;user-select:none}
-  .card .text-slide{width:90%;max-width:820px;color:var(--muted);font-size:1.05rem;line-height:1.7;white-space:pre-wrap;text-align:left;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px}
-
-  /* transform classes */
-  .effect-0{transform:translateY(0) scale(1) rotate(0deg)}
-  .effect-1{transform:translateY(-8px) scale(1.03) rotate(-1deg)}
-  .effect-2{transform:translateX(8px) scale(1.04) rotate(1deg)}
-  .effect-3{transform:translateY(6px) scale(1.02) rotate(-0.6deg)}
-  .effect-4{transform:translateX(-6px) scale(1.05) rotate(0.8deg)}
-  .effect-5{transform:translateY(-10px) scale(1.06) rotate(-1.2deg)}
-  .effect-6{transform:translateX(10px) scale(1.04) rotate(1.4deg)}
-  .effect-7{transform:translateY(8px) scale(1.03) rotate(-0.8deg)}
-
-  /* nav buttons */
-  .nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:12px;border:none;background:rgba(0,0,0,0.36);backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;z-index:10}
-  .nav:active{transform:translateY(-50%) scale(.98)}
-  #prev{left:14px} #next{right:14px}
-
-  /* controls row */
-  .controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px}
-  .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
-  #page-info{min-width:160px;text-align:center;color:var(--muted)}
-
-  /* typing caret for message */
-  .typing-caret{border-right:3px solid rgba(255,255,255,0.9);padding-right:4px}
-
-  /* message screen (final) */
-  #message-screen{display:none;position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.72), rgba(10,2,10,0.92));z-index:9998;display:flex;align-items:center;justify-content:center;padding:34px}
-  #message-card{width:min(980px,96%);max-height:86vh;overflow:auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:26px;border-radius:12px;box-shadow:0 30px 70px rgba(0,0,0,0.6)}
-  #message-area{color:#fff;font-size:1rem;line-height:1.8;white-space:pre-wrap;font-family:Georgia, 'Times New Roman', serif}
-
+  /* responsive tweaks */
   @media (max-width:720px){
-    .card{height:58vh}
-    #pw-input{width:200px}
-    #page-info{min-width:110px;font-size:14px}
-    .card .text-slide{font-size:0.95rem}
+    #greeting{font-size:2rem}
+    .card{height:56vh}
+    .nav-btn{width:44px;height:44px;font-size:18px}
   }
 </style>
 </head>
 <body>
 
-  <!-- Password screen -->
-  <div id="pw-screen" role="dialog" aria-modal="true">
-    <h1>Private — Enter Password</h1>
-    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" />
-    <div style="display:flex;gap:10px;align-items:center">
-      <button id="pw-btn">Enter</button>
+<!-- PASSWORD SCREEN -->
+<div id="pwScreen" class="center-full">
+  <div id="pwBox" style="text-align:left; width:360px;">
+    <h2>Enter Password 💕</h2>
+    <input id="pwInput" type="password" placeholder="Enter password" />
+    <div style="margin-top:10px;">
+      <button id="pwBtn">Enter</button>
     </div>
-    <div id="pw-note">(Keep it private)</div>
+    <div style="margin-top:8px; font-size:13px; color:var(--muted)"><small>Keep this link private — it unlocks the surprise.</small></div>
+  </div>
+</div>
+
+<!-- GREETING -->
+<div id="greetingWrap" class="center-full" style="display:none">
+  <div id="greeting" style="animation:greetIn .8s ease both">HAPPY BIRTHDAY THATHSAVI ❤️</div>
+</div>
+
+<!-- SLIDESHOW -->
+<div id="slideshowWrap" style="display:none; height:100vh; align-items:center; justify-content:center; flex-direction:column;">
+  <div class="card">
+    <div class="card-inner">
+      <img id="slideImg" src="" alt="photo" />
+    </div>
+    <button class="nav-btn" id="prevBtn" title="Previous (Left)">&larr;</button>
+    <button class="nav-btn" id="nextBtn" title="Next (Right)">&rarr;</button>
   </div>
 
-  <!-- Application -->
-  <div id="app" aria-hidden="true">
-
-    <!-- Title screen (immediately after password) -->
-    <div id="title-screen" style="display:none;">
-      <h2 id="title-text">Happy Birthday Thathsavi ❤️</h2>
-      <p style="color:var(--muted)">Wishing you a wonderful year ahead ✨</p>
-      <div style="margin-top:10px">
-        <button class="btn" id="start-images-btn">Show Photos</button>
-      </div>
-    </div>
-
-    <!-- Card viewer -->
-    <div class="card" id="card">
-      <div class="card-inner">
-        <!-- image OR text slide will be injected here -->
-        <img id="slide-img" src="" alt="photo" draggable="false" style="display:none" />
-        <div id="slide-text" class="text-slide" style="display:none"></div>
-      </div>
-      <button class="nav" id="prev" title="Previous (Left)">&larr;</button>
-      <button class="nav" id="next" title="Next (Right)">&rarr;</button>
-    </div>
-
-    <div class="controls">
-      <button class="btn" id="first-btn">First</button>
-      <div id="page-info">Slide 0 / 0</div>
-      <button class="btn" id="last-btn">Last</button>
-      <button class="btn" id="play-all-btn">Play All Slides</button>
-    </div>
-
+  <div class="controls-row">
+    <button class="btn" id="firstBtn">First</button>
+    <div id="pageInfo" style="min-width:160px; text-align:center; color:var(--muted)"></div>
+    <button class="btn" id="lastBtn">Last</button>
+    <button class="btn" id="finishBtn">Finish & Show Message</button>
   </div>
+</div>
 
-  <!-- final message screen (alternative/overlay) -->
-  <div id="message-screen" role="dialog" aria-modal="true">
-    <div id="message-card">
-      <div id="message-area"></div>
-    </div>
-  </div>
+<!-- MESSAGE (two slide cards) -->
+<div id="messageWrap" style="display:none; align-items:center; justify-content:center;">
+  <div id="messageCard1" class="msg-card" style="display:none"></div>
+  <div id="messageCard2" class="msg-card" style="display:none"></div>
+</div>
 
 <script>
-/* ========== CONFIG ========== */
-/* Image filenames (11) - ensure these exist in assets/ exactly */
-const imageFiles = [
-  'assets/photo1.jpg',
-  'assets/photo2.jpg',
-  'assets/photo3.jpg',
-  'assets/photo4.jpg',
-  'assets/photo5.jpg',
-  'assets/photo6.jpg',
-  'assets/photo7.jpg',
-  'assets/photo8.jpg',
-  'assets/photo9.jpg',
-  'assets/photo10.jpg',
-  'assets/photo11.jpg'
-];
-
+/* ======== CONFIG ======== */
 const PASSWORD = "I AM IDIOT";
 
-/* The long message (we split into two slides below) */
-const longMessage = `Hi Thathsavi Happy Birthday Rah❤️ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi. 
+const images = [
+  'assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg',
+  'assets/photo6.jpg','assets/photo7.jpg','assets/photo8.jpg','assets/photo9.jpg','assets/photo10.jpg','assets/photo11.jpg'
+];
+
+/* long message split into two parts (exact text you provided) */
+const messagePart1 = `Hi Thathsavi Happy Birthday Rah❤ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali.`;
+
+const messagePart2 = `And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi. 
 Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
 22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
-Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺️😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺️ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤️ have a wonderful 😊 Time and Smile In Your Face 
-Love You ra pottilu ❤️ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025`;
+Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤ have a wonderful 😊 Time and Smile In Your Face 
+Love You ra pottilu ❤ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 .
+Hope You Enjoyed This Link And Make Sure Don't share the Link Because If You Share this it anyone It will Be deactivated In 2 seconds..... Bye ... Love U Ra Thachu`;
 
-/* split the long message into two roughly equal parts for two text slides */
-function splitMessageIntoTwo(msg){
-  const words = msg.split(/\s+/);
-  const half = Math.ceil(words.length/2);
-  const part1 = words.slice(0,half).join(' ');
-  const part2 = words.slice(half).join(' ');
-  return [part1, part2];
-}
-const [messagePart1, messagePart2] = splitMessageIntoTwo(longMessage);
+/* ======== DOM refs ======== */
+const pwScreen = document.getElementById('pwScreen');
+const pwInput = document.getElementById('pwInput');
+const pwBtn = document.getElementById('pwBtn');
+const greetingWrap = document.getElementById('greetingWrap');
+const slideshowWrap = document.getElementById('slideshowWrap');
+const slideImg = document.getElementById('slideImg');
+const prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn');
+const firstBtn = document.getElementById('firstBtn'), lastBtn = document.getElementById('lastBtn');
+const pageInfo = document.getElementById('pageInfo');
+const finishBtn = document.getElementById('finishBtn');
+const messageWrap = document.getElementById('messageWrap');
+const messageCard1 = document.getElementById('messageCard1');
+const messageCard2 = document.getElementById('messageCard2');
 
-/* Build slides array in order:
-   0: title screen (handled separately)
-   1..11: images (imageFiles)
-   12: messagePart1 (text slide)
-   13: messagePart2 (text slide)
-*/
-const slides = imageFiles.map(src => ({type:'image', src}))
-  .concat([
-    {type:'text', text: messagePart1},
-    {type:'text', text: messagePart2}
-]);
+/* ======== state ======== */
+let idx = 0;
 
-/* ========== UI references ========== */
-const pwScreen = document.getElementById('pw-screen');
-const pwInput = document.getElementById('pw-input');
-const pwBtn = document.getElementById('pw-btn');
+/* ======== utilities ======== */
+function updatePageInfo(){ pageInfo.textContent = `Photo ${idx+1} / ${images.length}`; }
 
-const app = document.getElementById('app');
-const titleScreen = document.getElementById('title-screen');
-const startImagesBtn = document.getElementById('start-images-btn');
-
-const slideImg = document.getElementById('slide-img');
-const slideText = document.getElementById('slide-text');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-const firstBtn = document.getElementById('first-btn');
-const lastBtn = document.getElementById('last-btn');
-const pageInfo = document.getElementById('page-info');
-const playAllBtn = document.getElementById('play-all-btn');
-const messageScreen = document.getElementById('message-screen');
-const messageArea = document.getElementById('message-area');
-
-/* state */
-let currentIndex = -1; // -1 = title screen; 0..slides.length-1 are slides
-let typingTimer = null;
-
-/* ========== FUNCTIONS ========== */
-
-function showTitleScreen(){
-  titleScreen.style.display = 'flex';
-  document.getElementById('card').style.display = 'none';
-  document.querySelector('.controls').style.display = 'none';
-}
-
-/* show slide by index (0..slides.length-1) */
-function showSlide(i){
-  // clamp
-  if(i < 0) i = 0;
-  if(i >= slides.length) i = slides.length - 1;
-  currentIndex = i;
-  // show card area
-  document.getElementById('card').style.display = 'block';
-  document.querySelector('.controls').style.display = 'flex';
-  // stop typing if any
-  clearTyping();
-  // update page info
-  pageInfo.textContent = `Slide ${currentIndex+1} / ${slides.length}`;
-  const s = slides[currentIndex];
-  if(s.type === 'image'){
-    // show image element
-    slideText.style.display = 'none';
-    slideImg.style.display = 'block';
-    // set image with small cache-bust to avoid stale upload artifacts
-    const base = s.src;
-    const url = base + (base.includes('?') ? '&_cb=' + Date.now() : '?_cb=' + Date.now());
-    slideImg.style.opacity = '0';
-    slideImg.src = url;
-    slideImg.alt = `Photo ${currentIndex+1}`;
-    slideImg.onload = () => {
+/* safe set image with retry to fix upload-edge cases */
+function setSlide(i){
+  if(i<0) i=0; if(i>=images.length) i=images.length-1;
+  idx = i; updatePageInfo();
+  messageWrap.style.display = 'none';
+  slideImg.style.opacity = '0';
+  // try cache-bust to avoid stale browser cache problems
+  const src = images[idx] + (images[idx].includes('?') ? '&cb=' + Date.now() : '?cb=' + Date.now());
+  slideImg.src = src;
+  slideImg.alt = `Photo ${idx+1}`;
+  slideImg.onload = () => {
+    slideImg.style.opacity = '1';
+    // apply transform class
+    for(let n=0;n<8;n++) slideImg.classList.remove('effect-'+n);
+    slideImg.classList.add('effect-' + (idx % 8));
+  };
+  slideImg.onerror = () => {
+    // fallback: try without cache-bust
+    if(slideImg.src.indexOf('?cb=') !== -1){
+      slideImg.src = images[idx];
+    } else {
       slideImg.style.opacity = '1';
-      slideImg.style.filter = 'none';
-      applyTransformClass(slideImg, currentIndex);
-    };
-    slideImg.onerror = () => {
-      // fallback message
-      slideImg.style.display = 'none';
-      slideText.style.display = 'block';
-      slideText.textContent = `Unable to load image ${currentIndex+1}`;
-    };
-  } else if(s.type === 'text'){
-    // show text slide
-    slideImg.style.display = 'none';
-    slideText.style.display = 'block';
-    slideText.textContent = ''; // will be typed
-    applyTransformClass(slideText, currentIndex);
-    // start typing for this text slide
-    startTypingForText(s.text, slideText);
-  }
+      slideImg.alt = 'Image not available';
+      slideImg.style.filter = 'grayscale(80%)';
+    }
+  };
 }
 
-/* small helper to apply transform class to element */
-function applyTransformClass(el, idx){
-  // remove existing effect classes
-  for(let n=0;n<8;n++) el.classList.remove('effect-'+n);
-  const cls = 'effect-' + (idx % 8);
-  el.classList.add(cls);
-}
-
-/* navigation */
-prevBtn.addEventListener('click', ()=> {
-  if(currentIndex > 0) showSlide(currentIndex - 1);
+/* ======== navigation handlers ======== */
+prevBtn.addEventListener('click', ()=>{ if(idx>0) setSlide(idx-1); });
+nextBtn.addEventListener('click', ()=>{
+  if(idx < images.length - 1) setSlide(idx+1);
+  else startMessageSequence();
 });
-nextBtn.addEventListener('click', ()=> {
-  if(currentIndex < slides.length - 1) showSlide(currentIndex + 1);
-  else {
-    // finished all slides; show message screen (final two text slides are part of slides array; after they finish nothing else)
-    // keep at last slide
-  }
-});
-firstBtn.addEventListener('click', ()=> showSlide(0));
-lastBtn.addEventListener('click', ()=> showSlide(slides.length - 1));
-playAllBtn.addEventListener('click', ()=> showSlide(0));
+firstBtn.addEventListener('click', ()=> setSlide(0));
+lastBtn.addEventListener('click', ()=> setSlide(images.length - 1));
+finishBtn.addEventListener('click', startMessageSequence);
 
-/* keyboard support */
+/* keyboard navigation */
 document.addEventListener('keydown', (e)=>{
   if(pwScreen.style.display !== 'none') return;
   if(e.key === 'ArrowLeft') prevBtn.click();
   if(e.key === 'ArrowRight') nextBtn.click();
 });
 
-/* mobile swipe */
-let tStartX = 0;
-document.querySelector('.card-inner').addEventListener('touchstart', e => { tStartX = e.touches[0].clientX; }, {passive:true});
+/* mobile swipe support */
+let touchStartX = 0;
+document.querySelector('.card-inner').addEventListener('touchstart', e => touchStartX = e.touches[0].clientX, {passive:true});
 document.querySelector('.card-inner').addEventListener('touchend', e => {
-  const x = e.changedTouches[0].clientX;
-  const d = x - tStartX;
-  if(Math.abs(d) > 40) {
-    if(d > 0) prevBtn.click(); else nextBtn.click();
-  }
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if(Math.abs(dx) > 40) dx>0 ? prevBtn.click() : nextBtn.click();
 }, {passive:true});
 
-/* typing for text slides with realistic delays */
-function startTypingForText(text, el){
-  el.textContent = '';
-  el.classList.add('typing-caret');
-  let i = 0;
-  function step(){
-    if(i >= text.length){
-      el.classList.remove('typing-caret');
-      return;
-    }
-    const ch = text[i++];
-    el.textContent += ch;
-    let delay = Math.random()*60 + 30; // 30..90ms base
-    if(ch === ',' ) delay += 120;
-    if(ch === '.' || ch === '!' || ch === '?') delay += 300;
-    if(ch === '\n') delay += 40;
-    typingTimer = setTimeout(step, delay);
-  }
-  step();
-}
-function clearTyping(){
-  if(typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
-  // remove caret from text container if any
-  slideText.classList.remove('typing-caret');
-}
+/* ======== password handling & flow ======== */
+pwBtn.addEventListener('click', tryUnlock);
+pwInput.addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlock(); });
 
-/* Password handling and sequence start */
-pwBtn.addEventListener('click', tryPassword);
-pwInput.addEventListener('keydown', e => { if(e.key === 'Enter') tryPassword(); });
-
-function tryPassword(){
+function tryUnlock(){
   const v = pwInput.value.trim();
   if(v === PASSWORD){
+    // hide pw, show greeting
     pwScreen.style.display = 'none';
-    app.style.visibility = 'visible';
-    // show title screen first
-    titleScreen.style.display = 'flex';
-    document.getElementById('card').style.display = 'none';
-    document.querySelector('.controls').style.display = 'none';
+    greetingWrap.style.display = 'flex';
+    // show greeting for 2 seconds then slideshow
+    setTimeout(()=> {
+      greetingWrap.style.display = 'none';
+      slideshowWrap.style.display = 'flex';
+      setSlide(0);
+      updatePageInfo();
+    }, 2000);
   } else {
     alert('Wrong password — try again.');
     pwInput.value = '';
@@ -340,26 +241,55 @@ function tryPassword(){
   }
 }
 
-/* start images button from title screen */
-startImagesBtn.addEventListener('click', ()=> {
-  titleScreen.style.display = 'none';
-  document.getElementById('card').style.display = 'block';
-  document.querySelector('.controls').style.display = 'flex';
-  // start at first image (index 0)
-  showSlide(0);
-});
+/* ======== message typing sequence ======== */
+function startMessageSequence(){
+  // hide slideshow controls
+  slideshowWrap.style.display = 'none';
+  // show message wrap and first card
+  messageWrap.style.display = 'flex';
+  messageCard1.style.display = 'block';
+  messageCard2.style.display = 'none';
+  typeText(messagePart1, messageCard1, ()=> {
+    // after first finishes, slight pause then show second card typed
+    setTimeout(()=> {
+      messageCard1.style.display = 'none';
+      messageCard2.style.display = 'block';
+      typeText(messagePart2, messageCard2, ()=> {
+        // typing finished — nothing more (you could show a finish button)
+      });
+    }, 800);
+  });
+}
 
-/* Preload images (light) */
+/* realistic typing */
+function typeText(text, container, done){
+  container.textContent = '';
+  let i = 0;
+  function step(){
+    if(i >= text.length){ if(done) done(); return; }
+    const ch = text[i++];
+    container.textContent += ch;
+    // variable delay for natural feel
+    let delay = Math.random()*60 + 20;
+    if(ch === ',' ) delay += 120;
+    if(ch === '.' || ch === '!' || ch === '?') delay += 300;
+    if(ch === '\n') delay += 120;
+    setTimeout(step, delay);
+  }
+  step();
+}
+
+/* simple preload images */
 (function preload(){
-  imageFiles.forEach(s => { const im = new Image(); im.src = s; });
+  images.forEach(s => { const im = new Image(); im.src = s; });
 })();
 
-/* Protections (best-effort) */
+/* protections (best-effort) */
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('dragstart', e => { if(e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault(); }, false);
 document.addEventListener('keydown', e => {
-  if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase()==='s' || e.key.toLowerCase()==='u' || e.key === 'F12')) { e.preventDefault(); alert('This content is private.'); }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p'){ e.preventDefault(); alert('Printing disabled.'); }
+  if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase()==='s' || e.key.toLowerCase()==='u' || e.key==='F12')){ e.preventDefault(); alert('This content is private.'); }
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='p'){ e.preventDefault(); alert('Printing disabled.'); }
 });
 document.addEventListener('keyup', e => {
   if(e.key === 'PrintScreen' || e.keyCode === 44){
@@ -367,14 +297,15 @@ document.addEventListener('keyup', e => {
     overlay.style.position='fixed'; overlay.style.inset='0'; overlay.style.zIndex='99999';
     overlay.style.backdropFilter='blur(6px)'; overlay.style.background='rgba(0,0,0,0.35)';
     overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center';
-    overlay.style.color='white'; overlay.style.fontSize='18px'; overlay.textContent='Screen capture detected — private content.';
-    document.body.appendChild(overlay); setTimeout(()=> overlay.remove(), 1200);
-    try{ navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
+    overlay.style.color='#fff'; overlay.style.fontSize='20px'; overlay.textContent='Screen capture detected — private content.';
+    document.body.appendChild(overlay); setTimeout(()=>overlay.remove(),1200);
+    try{ navigator.clipboard && navigator.clipboard.writeText(''); }catch(e){}
   }
 });
 
-/* initialize: hide app until password accepted */
-app.style.visibility = 'hidden';
+/* initial state: show pw */
+document.body.querySelectorAll('[id$="Wrap"]').forEach(el=>el.style.display = 'none');
+pwScreen.style.display = 'flex';
 </script>
 </body>
 </html>
