@@ -1,244 +1,246 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Happy Birthday Thathsavi ❤️</title>
 <style>
 :root{
-  --accent: #ff4da6;
-  --card-bg: rgba(18,18,20,0.92);
+  --accent:#ff4da6;
+  --card-bg: rgba(18,18,20,0.95);
   --muted: rgba(255,255,255,0.75);
-  --glass: rgba(255,255,255,0.03);
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#fff;background:linear-gradient(180deg,#000,#120010);overflow:hidden}
-
-/* Hearts + sprinkle layer (behind content) */
-#particles {
-  position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
-  background: radial-gradient(ellipse at center, rgba(255,10,80,0.03) 0%, transparent 40%);
-}
-/* heart shape */
-.p {
-  position:absolute;
-  width:18px; height:18px;
-  transform:rotate(45deg);
-  background:linear-gradient(180deg, rgba(255,80,150,0.95), rgba(255,40,120,0.85));
-  filter: drop-shadow(0 6px 16px rgba(255,50,120,0.12));
-  border-radius:3px;
-  opacity:0.9;
-}
-.p::before, .p::after{
-  content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:inherit;
-  top:-9px; left:0;
-}
-.p::after{left:-9px; top:0;}
-@keyframes rise {
-  0%{ transform: translateY(120vh) rotate(45deg) scale(.6); opacity:0; }
-  10%{ opacity:0.9; }
-  100%{ transform: translateY(-30vh) rotate(45deg) scale(1.05); opacity:0; }
+html,body{
+  height:100%; margin:0; font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;
+  background: linear-gradient(180deg,#000 0%, #120010 70%);
+  color: #fff; overflow:hidden;
 }
 
-/* small sparkle dots for sprinkle */
-.spark {
-  position:absolute; width:6px; height:6px; border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,0.9) 20%, rgba(255,100,180,0.6) 60%);
-  filter:blur(0.6px); opacity:0.85;
-  animation: rise 6s linear infinite;
+/* particle canvas (behind everything) */
+#particle-layer{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background: radial-gradient(ellipse at center, rgba(255,10,80,0.02) 0%, transparent 40%);
 }
 
-/* center containers */
-.center {
+/* main content stack above particles */
+.app {
   position:relative; z-index:2;
-  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;
   height:100vh; width:100vw;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  gap:12px;
 }
 
-/* password modal - dark glass style */
-#pw {
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  border-radius:14px; padding:26px; min-width:320px; box-shadow:0 18px 60px rgba(0,0,0,0.7);
-  border:1px solid rgba(255,255,255,0.03);
-  text-align:center;
-}
-#pw h2 { margin:0 0 8px; color:var(--muted); font-size:18px; }
-#pw input{ width:280px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);
-  background:rgba(255,255,255,0.02); color:#fff; outline:none; font-size:15px; text-align:center; }
-#pw button{ margin-top:10px; padding:10px 18px; border-radius:10px; border:none; background:var(--accent); color:#fff; cursor:pointer; font-weight:700; }
-
-/* greeting */
-#greetWrap{ display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; }
-#greet{ font-size:34px; color:var(--accent); font-weight:800; text-shadow:0 8px 30px rgba(255,80,150,0.12); }
-
-/* card for slides & video - dark glass */
-.card {
-  width: min(900px, 92%); max-width:920px;
-  height: min(560px, 70vh);
-  border-radius:18px;
-  background: var(--card-bg);
+/* dark glass card */
+.pulse-card {
+  width: min(920px,92%); height: min(560px,70vh);
+  border-radius:18px; background: var(--card-bg);
   border: 1px solid rgba(255,255,255,0.03);
   box-shadow: 0 30px 90px rgba(0,0,0,0.6);
-  display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
-  padding:18px;
+  display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:18px;
 }
-.card-inner{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-#slide, #video { max-width:100%; max-height:100%; object-fit:contain; border-radius:12px; -webkit-user-drag:none; user-select:none; }
 
-/* controls */
-.controls { margin-top:12px; display:flex; gap:10px; align-items:center; justify-content:center; z-index:3; }
-.btn { padding:8px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--muted); cursor:pointer; }
-
-/* message overlay */
-#message { display:none; position:fixed; inset:0; z-index:6; align-items:center; justify-content:center; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)); padding:24px; }
-.msg {
-  width: min(920px,95%); max-height:80vh; overflow:auto; background: rgba(10,10,12,0.98);
-  color:#fff; padding:22px; border-radius:12px; box-shadow: 0 30px 80px rgba(0,0,0,0.8);
-  font-family: Georgia, 'Times New Roman', serif; line-height:1.7; font-size:15px;
+/* password box */
+#pwBox{
+  min-width:320px; padding:22px; border-radius:14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.03); text-align:center;
 }
-#reply { margin-top:6px; background:var(--accent); color:#fff; border:none; padding:10px 22px; border-radius:10px; cursor:pointer; font-size:15px; }
+#pwBox h2{margin:0 0 8px;color:var(--muted)}
+#pwInput{width:280px;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+#pwBtn{margin-top:10px;padding:10px 16px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:700}
+
+/* greeting */
+#greeting {font-size:34px;color:var(--accent);font-weight:800;text-align:center; text-shadow:0 10px 30px rgba(255,80,150,0.12)}
+
+/* slideshow / video layout */
+.controls{margin-top:12px; display:flex; gap:10px; align-items:center; justify-content:center; z-index:3}
+.btn{padding:8px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
+
+/* image/video styling (keep aspect ratio) */
+#slideImg, #videoEl {
+  max-width:100%; max-height:100%; object-fit:contain; border-radius:12px;
+  -webkit-user-drag:none; user-select:none;
+}
+
+/* message overlay (scrollable) */
+#messageOverlay {
+  display:none; position:fixed; inset:0; z-index:6; align-items:center; justify-content:center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.82)); padding:28px;
+}
+.msgCard {
+  width: min(920px,95%); max-height:80vh; overflow:auto; border-radius:12px;
+  background: linear-gradient(180deg, rgba(8,8,10,0.98), rgba(10,10,12,0.98));
+  border:1px solid rgba(255,255,255,0.03); padding:20px; color:#fff;
+  box-shadow:0 30px 80px rgba(0,0,0,0.8); font-family: Georgia, serif; line-height:1.7; font-size:15px;
+}
+#replyBtn{display:none;margin-top:10px;padding:10px 20px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer}
+
+/* small play hint overlay (if autoplay blocked) */
+#playHint {
+  position:absolute; left:50%; transform:translateX(-50%); top:18px; z-index:12;
+  background: rgba(0,0,0,0.6); color:#fff; padding:8px 12px; border-radius:999px; font-size:13px; display:none;
+}
 
 /* responsive */
-@media(max-width:720px){ #greet{font-size:22px} .card{height:56vh} .msg{font-size:15px} }
+@media (max-width:720px){
+  #greeting{font-size:22px}
+  .pulse-card{height:56vh}
+}
 </style>
 </head>
 <body>
+<!-- particles canvas -->
+<canvas id="particle-layer" aria-hidden="true"></canvas>
 
-<!-- hearts + sprinkle canvas (behind everything) -->
-<div id="particles" aria-hidden="true"></div>
-
-<!-- Password -->
-<div id="pw" class="center">
-  <h2>Enter Password 💕</h2>
-  <input id="pwInput" type="password" placeholder="Enter password" autocomplete="off"/>
-  <div><button id="pwBtn">Enter</button></div>
-</div>
-
-<!-- Greeting -->
-<div id="greetWrap" class="center" style="display:none">
-  <div id="greet">🎁 HAPPY BIRTHDAY THATHSAVI ❤️💖</div>
-</div>
-
-<!-- Slides -->
-<div id="slides" class="center" style="display:none">
-  <div class="card">
-    <div class="card-inner"><img id="slide" src="" alt="photo" draggable="false" oncontextmenu="return false"></div>
+<!-- app -->
+<div class="app" aria-live="polite">
+  <!-- password -->
+  <div id="pwBox" class="pulse-card" role="dialog" aria-modal="true">
+    <h2>Enter Password 💕</h2>
+    <input id="pwInput" type="password" placeholder="Enter password" autocomplete="off" />
+    <div><button id="pwBtn">Enter</button></div>
   </div>
-  <div class="controls">
-    <button id="prev" class="btn">Prev</button>
-    <button id="next" class="btn">Next</button>
-  </div>
-</div>
 
-<!-- Videos (same card area) -->
-<div id="videos" class="center" style="display:none">
-  <div class="card">
-    <div class="card-inner">
-      <video id="video" controls autoplay muted controlsList="nodownload" oncontextmenu="return false"></video>
+  <!-- greeting (hidden until unlocked) -->
+  <div id="greetingWrap" style="display:none; align-items:center; justify-content:center; flex-direction:column;">
+    <div id="greeting">🎁 HAPPY BIRTHDAY THATHSAVI ❤️💖</div>
+  </div>
+
+  <!-- slideshow (hidden initially) -->
+  <div id="slidesWrap" style="display:none; flex-direction:column; align-items:center;">
+    <div class="pulse-card" style="width: min(920px,92%);">
+      <div class="card-inner">
+        <img id="slideImg" src="" alt="photo" draggable="false" oncontextmenu="return false">
+      </div>
+    </div>
+    <div class="controls">
+      <button id="prevBtn" class="btn">Prev</button>
+      <button id="nextBtn" class="btn">Next</button>
+      <div id="pageInfo" style="min-width:160px;text-align:center;color:var(--muted)"></div>
+      <button id="finishToVideos" class="btn">Finish & Play Videos</button>
+    </div>
+  </div>
+
+  <!-- video area (hidden until images done) -->
+  <div id="videosWrap" style="display:none; flex-direction:column; align-items:center;">
+    <div class="pulse-card">
+      <div class="card-inner">
+        <video id="videoEl" controls autoplay muted controlsList="nodownload" playsinline oncontextmenu="return false"></video>
+      </div>
+      <div id="playHint">If video doesn't start automatically, tap ▶︎ on the player</div>
     </div>
   </div>
 </div>
 
-<!-- Messages -->
-<div id="message" style="display:none">
-  <div id="m1" class="msg" style="display:none"></div>
-  <div id="m2" class="msg" style="display:none"></div>
-  <button id="reply" style="display:none">💬 Reply</button>
+<!-- messages overlay -->
+<div id="messageOverlay" role="dialog" aria-modal="true">
+  <div id="msg1" class="msgCard" style="display:none"></div>
+  <div id="msg2" class="msgCard" style="display:none"></div>
+  <button id="replyBtn">💬 Reply</button>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
+/* ========= Config (keep file names exact in assets/) ========= */
 const PASSWORD = "I AM IDIOT";
 const IMAGES = [
- 'assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg',
- 'assets/photo6.jpg','assets/photo7.jpg','assets/photo8.jpg','assets/photo9.jpg','assets/photo10.jpg','assets/photo11.jpg'
+  'assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg',
+  'assets/photo6.jpg','assets/photo7.jpg','assets/photo8.jpg','assets/photo9.jpg','assets/photo10.jpg','assets/photo11.jpg'
 ];
 const VIDEOS = [
- 'assets/part1.mp4','assets/part2.mp4','assets/part3.mp4','assets/part4.mp4','assets/part5.mp4','assets/part6.mp4','assets/part7.mp4'
+  'assets/part1.mp4','assets/part2.mp4','assets/part3.mp4','assets/part4.mp4',
+  'assets/part5.mp4','assets/part6.mp4','assets/part7.mp4'
 ];
-const FULL_MSG_1 = `Hi Thathsavi Happy Birthday Rah❤ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.`;
-const FULL_MSG_2 = `Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
+const FULL_TEXT_1 = `Hi Thathsavi Happy Birthday Rah❤ It's Being 18 months rah neetho e travelling life long gurthu untundhi. Na Life lo okka wonder nuvvu since 5th April 2024 Mana bond Start ayindhi . Normal gah ne untundhi kavachu bond ani anukunna ,Kani intha thrilling gah intha happy gah neetho untta ani aaa roju assalu expect cheyya ledhu. Avnu naaku jealous akkuvane but adhi ninnu addukovli ani kaadhu ninnu protect cheyyali ani. Because vere abbayilu ala unttaro naaku telsu. And Nuv Bayataku velladam vellaka povadam ni istam ,but appudu msg chesthu undi Cheppa kunda pothe atu poynav anukovali. And nuvvu bayataku poyyi m sakkaga kuuda undavu gah atu etu dhunukuthu pothavu first jagrathaga povadam nerchuko. And nenu avvaritho matladaku ani cheppatle but neeku problem kaliginche  vallatho matladadam anavasaram adhi ardham chesuko. Evvi Anni Eroju nundi ayna ardham chesukuntte manchidhi.`;
+const FULL_TEXT_2 = `Evvi Anni pakkana pedithe Mana bond antte naaku chaala istam . Andharini pakkana pettali anipinche antha. Neeku ala undhi naaku telidhu kani naaku inthe. "Hi" nundi start ayyi "GM GN" dhaaka vachindhi sounds good anukovali. Every day calls msgs everything makes me feel good 😊. But mana madhya konni konni misunderstandings vallla manam bhadha paddam vere persons valla kuuda konni sarlu baadha paddam. Kani last ki malli manane unnam edhi matram nijanga wonder anukovali 
 22 nd december roju "nuv naaku vadhu Abhi Ani annav" kani malli almost December vachindhi eppudu nene kaavali ani unnav I m so happy about it.
 Edhe the time changes antte. Nenu neeku eche value eppatiki ayna ardham chesuko and ONCE AGAIN HAPPY BIRTHDAY RAH ☺😚.. LIFE LONG ELA NEE UNDALI ANI ANUKUNTTU UNTTTA...HAVE A GREAT YEAR RAH ☺ IDIOT 😵‍💫 HAVE A BEAUTIFUL DAY TOO..Smile Everyday.. Everytime..In Any situation ❤ have a wonderful 😊 Time and Smile In Your Face 
 Love You ra pottilu ❤ My Best Best Best Friend For Ever ra cutie 😊🥰........09 NOVEMBER 2025 .
-Hope You Enjoyed This Link And Make Sure Don't share the Link Because If You Share this it anyone It will Be deactivated In 2 seconds..... If You dont it will be with you life long......Bye ... Love U Ra Thachu 💖💞💘`;
+Hope You Enjoyed This Link And Make Sure Don't share the Link Because If You Share this it anyone It will Be deactivated In 2 seconds..... Bye ... Love U Ra Thachu 💖💞💘`;
 
-/* ===== DOM ===== */
-const pwBox = document.getElementById('pw'), pwIn = document.getElementById('pwInput'), pwBtn = document.getElementById('pwBtn');
-const greetWrap = document.getElementById('greetWrap'), slides = document.getElementById('slides');
-const slideImg = document.getElementById('slide'), prevBtn = document.getElementById('prev'), nextBtn = document.getElementById('next');
-const videosWrap = document.getElementById('videos'), videoEl = document.getElementById('video');
-const messageWrap = document.getElementById('message'), m1 = document.getElementById('m1'), m2 = document.getElementById('m2'), replyBtn = document.getElementById('reply');
-const particles = document.getElementById('particles');
+/* ===== DOM refs ===== */
+const pwBox = document.getElementById('pwBox'), pwInput = document.getElementById('pwInput'), pwBtn = document.getElementById('pwBtn');
+const greetingWrap = document.getElementById('greetingWrap'), slidesWrap = document.getElementById('slidesWrap');
+const slideImg = document.getElementById('slideImg'), prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn');
+const pageInfo = document.getElementById('pageInfo'), finishToVideos = document.getElementById('finishToVideos');
+const videosWrap = document.getElementById('videosWrap'), videoEl = document.getElementById('videoEl'), playHint = document.getElementById('playHint');
+const messageOverlay = document.getElementById('message'), msg1 = document.getElementById('m1'), msg2 = document.getElementById('m2'), replyBtn = document.getElementById('replyBtn');
 
-let index = 0;
+let idx = 0;
 
-/* ===== Password flow ===== */
-pwBtn.addEventListener('click', tryPw);
-pwIn.addEventListener('keydown', e=> { if(e.key==='Enter') tryPw(); });
-function tryPw(){
-  if(pwIn.value.trim() === PASSWORD){
-    pwBox.style.display='none';
-    greetWrap.style.display='flex';
-    setTimeout(()=>{ greetWrap.style.display='none'; slides.style.display='flex'; showSlide(0); }, 1800);
+/* ===== Password + flow ===== */
+pwBtn.addEventListener('click', unlock);
+pwInput.addEventListener('keydown', e => { if(e.key === 'Enter') unlock(); });
+
+function unlock(){
+  if(pwInput.value.trim() === PASSWORD){
+    pwBox.style.display = 'none';
+    greetingWrap.style.display = 'flex';
+    setTimeout(()=>{ greetingWrap.style.display='none'; slidesWrap.style.display='flex'; showSlide(0); }, 1600);
   } else {
     alert('Wrong password — try again.');
-    pwIn.value=''; pwIn.focus();
+    pwInput.value = '';
+    pwInput.focus();
   }
 }
 
 /* ===== Slideshow ===== */
 function showSlide(n){
-  index = Math.max(0, Math.min(IMAGES.length-1, n));
-  // cache-bust to avoid stale upload glitches
-  const src = IMAGES[index] + (IMAGES[index].includes('?') ? '&cb='+Date.now() : '?cb='+Date.now());
+  idx = Math.max(0, Math.min(IMAGES.length-1, n));
+  pageInfo.textContent = `Photo ${idx+1} / ${IMAGES.length}`;
+  // cache-bust to help with newly uploaded images
+  const src = IMAGES[idx] + (IMAGES[idx].includes('?') ? '&cb=' + Date.now() : '?cb=' + Date.now());
   slideImg.src = src;
 }
-prevBtn.addEventListener('click', ()=> { if(index>0) showSlide(index-1); });
-nextBtn.addEventListener('click', ()=> { if(index < IMAGES.length-1) showSlide(index+1); else startVideoSequence(); });
+prevBtn.addEventListener('click', ()=> { if(idx > 0) showSlide(idx-1); });
+nextBtn.addEventListener('click', ()=> { if(idx < IMAGES.length-1) showSlide(idx+1); else startVideos(); });
+finishToVideos.addEventListener('click', startVideos);
 
-/* ===== Video sequence (in same card area) ===== */
-function startVideoSequence(){
-  slides.style.display='none';
-  videosWrap.style.display='flex';
-  let v=0;
+/* ===== Video sequence in same card area ===== */
+function startVideos(){
+  slidesWrap.style.display = 'none';
+  videosWrap.style.display = 'flex';
+  let v = 0;
   videoEl.src = VIDEOS[v];
-  videoEl.play().catch(()=>{}); // may require user interaction on some browsers
-  videoEl.onended = ()=> {
+  // try to play; if autoplay blocked we show hint
+  videoEl.play().then(()=> { playHint.style.display = 'none'; }).catch(()=> { playHint.style.display = 'block'; });
+  videoEl.onended = () => {
     v++;
     if(v < VIDEOS.length){
       videoEl.src = VIDEOS[v];
-      videoEl.play().catch(()=>{});
+      videoEl.play().catch(()=>{ playHint.style.display = 'block'; });
     } else {
-      videosWrap.style.display='none';
+      videosWrap.style.display = 'none';
       startMessages();
     }
   };
 }
 
-/* ===== Typing messages (scrollable) ===== */
+/* ===== Messages (typing + scrollable) ===== */
 function startMessages(){
-  messageWrap.style.display='flex';
-  m1.style.display='block'; m2.style.display='none';
-  typeText(FULL_MSG_1, m1, ()=> {
-    // small pause then second card
-    setTimeout(()=>{ m1.style.display='none'; m2.style.display='block'; typeText(FULL_MSG_2, m2, ()=> { replyBtn.style.display='block'; }); }, 700);
+  messageOverlay.style.display = 'flex';
+  msg1.style.display = 'block'; msg2.style.display = 'none';
+  typeText(FULL_TEXT_1, msg1, ()=> {
+    setTimeout(()=> {
+      msg1.style.display = 'none'; msg2.style.display = 'block';
+      typeText(FULL_TEXT_2, msg2, ()=> { replyBtn.style.display = 'block'; });
+    }, 800);
   });
 }
+
 function typeText(text, el, done){
   el.textContent = '';
-  let c = 0;
+  let i = 0;
   function step(){
-    if(c >= text.length){ done && done(); return; }
-    el.textContent += text[c++];
-    // keep scrolled to bottom as letters append
+    if(i >= text.length){ if(done) done(); return; }
+    el.textContent += text.charAt(i++);
     el.scrollTop = el.scrollHeight;
-    // natural typing rhythm
-    let delay = Math.random()*55 + 18;
-    const ch = text[c-1];
-    if(ch === ',' ) delay += 90;
-    if(ch === '.' || ch === '!' || ch === '?') delay += 240;
-    if(ch === '\n') delay += 120;
+    // typing rhythm
+    let delay = Math.random()*60 + 20;
+    const ch = text.charAt(i-1);
+    if(ch === ',') delay += 120;
+    if(ch === '.' || ch === '!' || ch === '?') delay += 300;
+    if(ch === '\n') delay += 80;
     setTimeout(step, delay);
   }
   step();
@@ -247,92 +249,147 @@ function typeText(text, el, done){
 /* Reply button -> WhatsApp with preset message */
 replyBtn.addEventListener('click', ()=> {
   const number = '919948264097';
-  const message = encodeURIComponent('Hi Abhi 💕 loved your surprise so much 🥰❤️ it really made my day!');
-  window.open(`https://wa.me/${number}?text=${message}`, '_blank');
+  const msg = encodeURIComponent('Hi Thachu 💕 loved your surprise so much 🥰❤️ it really made my day!');
+  window.open(`https://wa.me/${number}?text=${msg}`, '_blank');
 });
 
-/* ===== Particles (hearts + sparkles) ===== */
-function spawnParticle(kind='heart'){
-  const el = document.createElement(kind==='heart'?'div':'div');
-  el.className = kind==='heart' ? 'p' : 'spark';
-  // random horizontal start
-  el.style.left = (Math.random()*100) + 'vw';
-  const size = Math.floor(8 + Math.random()*18);
-  el.style.width = size+'px'; el.style.height = size+'px';
-  el.style.opacity = (0.5 + Math.random()*0.6).toString();
-  const dur = (6 + Math.random()*6);
-  el.style.animationDuration = dur + 's';
-  // random delay small
-  el.style.animationDelay = (Math.random()*1)+'s';
-  particles.appendChild(el);
-  // remove after animation end
-  setTimeout(()=> el.remove(), (dur+1)*1000);
-}
-// create both hearts and small sparkles
-function burst(){
-  const count = 6 + Math.floor(Math.random()*8);
-  for(let i=0;i<count;i++){
-    spawnParticle('heart');
-    if(Math.random() > 0.5) spawnParticle('spark');
+/* ===== Particle system: hearts + sparkles (canvas for performance) ===== */
+(function particleEngine(){
+  const canvas = document.getElementById('particle-layer');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = innerWidth;
+  let H = canvas.height = innerHeight;
+  window.addEventListener('resize', ()=> { W = canvas.width = innerWidth; H = canvas.height = innerHeight; });
+
+  const particles = []; // single array for hearts + dots
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+
+  function spawn(){
+    // spawn several each tick with random type
+    const count = 3 + Math.floor(Math.random()*5);
+    for(let i=0;i<count;i++){
+      if(Math.random() < 0.6){
+        // heart-like particle (drawn as rotated square with two circles)
+        particles.push({
+          type:'heart',
+          x: rand(0,W), y: H + rand(10,60),
+          vx: rand(-0.3,0.3), vy: -rand(0.6,1.6),
+          life: rand(4,10), size: rand(8,20), t:0, alpha: rand(0.6,1)
+        });
+      } else {
+        // sparkle dot
+        particles.push({
+          type:'spark',
+          x: rand(0,W), y: H + rand(10,60),
+          vx: rand(-0.6,0.6), vy: -rand(0.8,2.4),
+          life: rand(3,7), size: rand(3,8), t:0, alpha: rand(0.6,1)
+        });
+      }
+    }
   }
-}
-setInterval(burst, 700);
+
+  function drawHeart(x,y,size,alpha){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(Math.PI/4);
+    ctx.globalAlpha = alpha;
+    const grad = ctx.createLinearGradient(-size, -size, size, size);
+    grad.addColorStop(0, 'rgba(255,120,170,0.95)');
+    grad.addColorStop(1, 'rgba(255,40,120,0.9)');
+    ctx.fillStyle = grad;
+    // rotated square (diamond)
+    ctx.beginPath();
+    ctx.rect(-size/1.6, -size/1.6, size*1.2, size*1.2);
+    ctx.fill();
+    // two circles for the top bumps
+    ctx.beginPath();
+    ctx.arc(-size/1.6, -size/1.6, size/1.6, 0, Math.PI*2);
+    ctx.arc(size/1.6, -size/1.6, size/1.6, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawSpark(x,y,size,alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.arc(x,y,size/2,0,Math.PI*2);
+    const grad = ctx.createRadialGradient(x,y,0,x,y,size);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.4, 'rgba(255,200,230,0.9)');
+    grad.addColorStop(1, 'rgba(255,120,170,0.05)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function update(dt){
+    ctx.clearRect(0,0,W,H);
+    // update particles
+    for(let i = particles.length-1; i>=0; i--){
+      const p = particles[i];
+      p.t += dt;
+      p.x += p.vx * 60 * dt;
+      p.y += p.vy * 60 * dt;
+      // small horizontal drift
+      p.vx += Math.sin(p.t*0.6)*0.002;
+      // fade
+      const lifeRatio = p.t / p.life;
+      const alpha = Math.max(0, p.alpha * (1 - lifeRatio));
+      if(p.type === 'heart'){ drawHeart(p.x, p.y, p.size, alpha); }
+      else drawSpark(p.x, p.y, p.size, alpha);
+      if(p.t >= p.life || p.y < -100) particles.splice(i,1);
+    }
+    // occasionally spawn more
+    if(Math.random() < 0.14) spawn();
+    requestAnimationFrame(()=> update(1/60));
+  }
+  // start loop
+  update(1/60);
+})();
 
 /* ===== Protections (best-effort) ===== */
-// disable right-click globally
-document.addEventListener('contextmenu', e=> e.preventDefault());
-// disable dragging of media
+// disable contextmenu globally
+document.addEventListener('contextmenu', e => e.preventDefault());
+// disable dragstart on images/videos
 document.querySelectorAll('img,video').forEach(el=>{
-  el.setAttribute('draggable','false');
-  el.addEventListener('dragstart', e=> e.preventDefault());
-  el.addEventListener('contextmenu', e=> e.preventDefault());
+  el.setAttribute('draggable', 'false');
+  el.addEventListener('dragstart', e => e.preventDefault());
+  el.addEventListener('contextmenu', e => e.preventDefault());
 });
-// block common shortcuts: save, view-source, devtools, print
+// disable common shortcuts (save, view-source, devtools, print)
 document.addEventListener('keydown', e=>{
-  const k = e.key.toLowerCase();
-  if(e.ctrlKey || e.metaKey){
-    if(k==='s' || k==='u' || (e.shiftKey && k==='i') || k==='p'){ e.preventDefault(); alert('Action disabled 💕'); }
+  const key = e.key.toLowerCase();
+  if((e.ctrlKey || e.metaKey) && (key === 's' || key === 'u' || (e.shiftKey && key==='i') || key === 'p')) {
+    e.preventDefault(); alert('Action disabled 💕');
   }
-  if(e.key === 'F12'){ e.preventDefault(); alert('Action disabled 💕'); }
-  // PrintScreen detection (best-effort)
-  if(e.key === 'PrintScreen'){ triggerScreenshotBlur(); }
+  if(e.key === 'f12'){ e.preventDefault(); alert('Action disabled 💕'); }
+  if(e.key === 'printscreen') triggerBlur();
 });
-// also detect PrintScreen via keyup code 44 (some browsers)
-document.addEventListener('keyup', e=> { if(e.keyCode === 44) triggerScreenshotBlur(); });
+// catch PrintScreen keyup code 44 too
+document.addEventListener('keyup', e => { if(e.keyCode === 44) triggerBlur(); });
 
-// blur overlay when screenshot attempted
-function triggerScreenshotBlur(){
+function triggerBlur(){
   const overlay = document.createElement('div');
   Object.assign(overlay.style, {
-    position:'fixed', inset:0, zIndex:99999, background:'rgba(0,0,0,0.7)',
-    display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:'18px', fontWeight:700
+    position:'fixed', inset:0, zIndex:99999, background:'rgba(0,0,0,0.8)', display:'flex',
+    alignItems:'center', justifyContent:'center', color:'#fff', fontSize:'18px', fontWeight:700
   });
   overlay.textContent = '📸 Screenshot discouraged — private content';
   document.body.appendChild(overlay);
-  try{ navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
+  try { navigator.clipboard && navigator.clipboard.writeText(''); } catch(e){}
   setTimeout(()=> overlay.remove(), 1400);
 }
 
-// extra blur if devtools opened via visibility trick (best-effort)
-let lastInnerWidth = window.innerWidth;
-setInterval(()=> {
-  if(window.innerWidth !== lastInnerWidth){
-    lastInnerWidth = window.innerWidth;
-    // small check for possible devtools resize
-    if(Math.abs(window.innerWidth - lastInnerWidth) > 120) triggerScreenshotBlur();
-  }
-}, 1200);
+/* block long-press image saving on mobile */
+document.addEventListener('touchstart', e => { if(e.touches.length > 1) e.preventDefault(); }, {passive:false});
 
-/* ===== Prevent long-touch menu and mobile long-press saving ===== */
-['touchstart','touchend','touchmove','gesturestart'].forEach(ev=>{
-  window.addEventListener(ev, ()=>{}, {passive:true});
-});
-document.addEventListener('touchstart', e=> { if(e.touches.length>1) e.preventDefault(); }, {passive:false});
+/* preload images for smoother show */
+IMAGES.forEach(s => { const im = new Image(); im.src = s; });
 
-/* ===== Small safety: preload images ===== */
-IMAGES.forEach(s=>{ const im=new Image(); im.src=s; });
+/* initial accessibility focus */
+pwInput.focus();
 
-/* init: nothing visible except pw box already present */
 </script>
 </body>
 </html>
