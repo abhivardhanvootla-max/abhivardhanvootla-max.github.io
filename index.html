@@ -164,13 +164,16 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe 
 <!-- MESSAGE -->
 <div id="message">
   <div id="m1" class="msg" style="display:none"></div>
+  <button id="nextMsg" style="display:none; margin-top:10px; padding:10px 22px; background:var(--accent); border:none; border-radius:10px; color:#fff; cursor:pointer;">Next ➜</button>
+
   <div id="m2" class="msg" style="display:none"></div>
   <button id="reply" style="display:none">💬 Reply</button>
 </div>
 
+
 <script>
 /* CONFIG */
-const PASSWORD = "I AM POTTI";
+const PASSWORD = "I AM BANGARAM";
 const IMAGES = [
  'assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg',
  'assets/photo6.jpg','assets/photo7.jpg','assets/photo8.jpg','assets/photo9.jpg','assets/photo10.jpg','assets/photo11.jpg'
@@ -230,12 +233,26 @@ function startVideoSequence(){
 /* MESSAGES */
 function startMessages(){
   message.style.display="flex";
-  m1.style.display="block";
-  type(FULL_MSG_1,m1,()=>{
-    m1.style.display="none"; m2.style.display="block";
-    type(FULL_MSG_2,m2,()=>{ reply.style.display="block"; });
+
+  // show first slide
+  m1.style.display = "block";
+  type(FULL_MSG_1, m1, () => {
+    // after typing, show Next button
+    document.getElementById('nextMsg').style.display = "block";
   });
 }
+
+// when NEXT is clicked → show second slide
+document.getElementById('nextMsg').onclick = () => {
+  document.getElementById('nextMsg').style.display = "none";
+  m1.style.display = "none";
+  m2.style.display = "block";
+
+  type(FULL_MSG_2, m2, () => {
+    reply.style.display = "block";
+  });
+};
+
 function type(text,box,done){
   let i=0; box.textContent="";
   function step(){
